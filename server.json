@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "firstName": "Thomas",
+      "lastName": "Hudson",
+      "birthDate": "1989-12-24",
+      "email": "thomas.hudson@gmail.com",
+      "document": "52254883070",
+      "password": "MTIzNDU2",
+      "role": "ADMIN"
+    },
+    {
+      "id": 2,
+      "firstName": "Gallegos",
+      "lastName": "Hopkins",
+      "birthDate": "1996-10-24",
+      "email": "gallegos@hopkins.com",
+      "document": "28453844089",
+      "password": "MTIzNDU2",
+      "role": "USER"
+    }
+  ]
+}

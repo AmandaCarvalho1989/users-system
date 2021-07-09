@@ -22,17 +22,11 @@ export const SignIn: React.FC = () => {
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
-  const { register, handleSubmit,  getValues} = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: SignInCredentials) => {
-    console.log({ data });
     await signIn(data);
   };
-  // const onSubmitData = async (event: FormEvent) => {
-  //   event.preventDefault()
-  //   const data = getValues()
-  //   await signIn(data);
-  // };
 
   return (
     <HStack

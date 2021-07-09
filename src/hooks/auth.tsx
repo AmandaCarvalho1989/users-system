@@ -7,33 +7,25 @@ import React, {
   useEffect,
 } from "react";
 import { api } from "../services/api";
+import { IUser } from "../types/User";
 import base64 from "base-64";
-interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  birthDate: string;
-  email: string;
-  document: string;
-  password: string;
-  role: string;
-}
 
 export interface SignInCredentials {
   email: string;
   password: string;
 }
 interface AuthContextData {
-  user: User;
+  user: IUser;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  updateUser(user: User): void;
+  updateUser: (user: IUser) => void;
+
   isAuthenticated: boolean;
 }
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: User;
+  user: IUser;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -42,17 +34,20 @@ const AuthProvider: React.FC = ({ children }) => {
   const router = useRouter();
 
   const [data, setData] = useState<AuthState>({} as AuthState);
+  // const [authState, setAuthState] = useState<AuthState>({} as AuthState);
 
   useEffect(() => {
     const user = localStorage.getItem("@UsersSystem:user");
+    console.log("hook: ", { user });
     if (user) {
+      console.log("tem usuário", JSON.parse(user));
       setData({
-        user: JSON.parse(user),
+        user: JSON.parse(user)[0],
         isAuthenticated: true,
       });
       router.push("/");
     } else router.push("/signin");
-  }, [router]);
+  }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
     console.log({ email, password });
@@ -81,7 +76,7 @@ const AuthProvider: React.FC = ({ children }) => {
     } catch (error) {
       console.log(error);
       setData({
-        user: {} as User,
+        user: {} as IUser,
         isAuthenticated: false,
       });
     }
@@ -94,16 +89,13 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
-  const updateUser = useCallback(
-    (user: User) => {
-      localStorage.setItem("@UsersSystem:user", JSON.stringify(user));
-      setData({
-        ...data,
-        user,
-      });
-    },
-    [setData, data]
-  );
+  const updateUser = (user: IUser) => {
+    localStorage.setItem("@UsersSystem:user", JSON.stringify(user));
+    setData({
+      ...data,
+      user,
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -112,6 +104,7 @@ const AuthProvider: React.FC = ({ children }) => {
         signIn,
         signOut,
         updateUser,
+
         isAuthenticated: data.isAuthenticated,
       }}
     >

@@ -28,9 +28,9 @@ export const ModalDeleteUser: React.FC<ModalDeleteUserProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent alignSelf='center'>
         <ModalHeader>Deletar usuário</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

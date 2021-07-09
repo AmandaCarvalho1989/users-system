@@ -87,6 +87,7 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem("@UsersSystem:user");
 
     setData({} as AuthState);
+    router.push("/signin");
   }, []);
 
   const updateUser = (user: IUser) => {

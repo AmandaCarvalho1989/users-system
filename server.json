@@ -19,6 +19,16 @@
       "document": "28453844089",
       "password": "MTIzNDU2",
       "role": "USER"
+    },
+    {
+      "firstName": "Amanda",
+      "lastName": "Carvalho",
+      "birthDate": "2021-07-05",
+      "document": "48888310843",
+      "email": "amandamvcarvalho@gmail.com",
+      "password": "MTIzNDU2",
+      "role": "USER",
+      "id": 3
     }
   ]
 }

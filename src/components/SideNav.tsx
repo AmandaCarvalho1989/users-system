@@ -10,10 +10,12 @@ import {
   Link as ChakraLink,
   HStack,
   Icon,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { HiTemplate, HiUser, HiAcademicCap, HiLogout } from "react-icons/hi";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../hooks/auth";
+import { Modal } from "./Modal";
 
 const menuItems = [
   {
@@ -38,8 +40,14 @@ const menuItems = [
 
 export const SideNav: React.FC = () => {
   const { pathname } = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { signOut } = useAuth();
+
+  const checkIfIsActive = (value: string) => {
+    if (value === "/") return value === pathname;
+    else return value === pathname || pathname.includes(value);
+  };
 
   return (
     <VStack
@@ -52,20 +60,22 @@ export const SideNav: React.FC = () => {
       px="1.5rem"
       justifyContent="space-between"
     >
-      <Heading color="white" size='md' alignSelf="flex-start">
+      <Heading color="white" size="md" alignSelf="flex-start">
         LOGO
       </Heading>
       <List spacing="1rem" w="full" fontWeight="600">
         {menuItems.map((item) => (
-          <ListItem as={Link} href="/" key={item.name}>
+          <ListItem as={Link} href={item.path} key={item.name}>
             <ChakraLink
               display="flex"
               alignItems="center"
               h="3rem"
               px="1rem"
               borderRadius="md"
-              bgColor={pathname === item.path ? "purple.500" : "transparent"}
-              color={pathname === item.path ? "white" : "purple.50"}
+              bgColor={
+                checkIfIsActive(item.path) ? "purple.500" : "transparent"
+              }
+              color={checkIfIsActive(item.path) ? "white" : "purple.50"}
             >
               <ListIcon as={item.icon} w={6} h={6} />
               <Text mt="2px" fontSize="lg">
@@ -77,10 +87,18 @@ export const SideNav: React.FC = () => {
         ))}
       </List>
 
-      <HStack w="full" color="white" cursor="pointer" onClick={signOut}>
+      <HStack w="full" color="white" cursor="pointer" onClick={onOpen}>
         <Icon as={HiLogout} w={6} h={6} />
         <Text>Logout</Text>
       </HStack>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Sair da aplicação"
+        description="Tem certeza que deseja sair? "
+        primaryButtonText='Sair'
+        onActionButtonClick={signOut}
+      />
     </VStack>
   );
 };

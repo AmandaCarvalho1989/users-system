@@ -21,12 +21,16 @@ export interface HeaderData {
 interface TableProps {
   headerData: HeaderData[];
   bodyData: Array<any>;
+  hasPermission?: boolean;
   onDeleteClick?: (user: IUser) => void;
+  onEditClick?: (user: IUser) => void;
 }
 export const Table: React.FC<TableProps> = ({
   headerData,
   bodyData,
   onDeleteClick,
+  onEditClick,
+  hasPermission = false,
 }) => {
   return (
     <ChakraTable variant="striped" colorScheme="gray" bgColor="white" p="1rem">
@@ -35,7 +39,7 @@ export const Table: React.FC<TableProps> = ({
           {headerData.map((item) => (
             <Th key={item.key}>{item.label}</Th>
           ))}
-          <Th>Actions</Th>
+          <Th display={hasPermission ? "block" : "none"}>Actions</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -48,7 +52,7 @@ export const Table: React.FC<TableProps> = ({
                 {headerData.map((value, idx) => (
                   <Td key={idx}>{item[value.key]}</Td>
                 ))}
-                <Td>
+                <Td display={hasPermission ? "block" : "none"}>
                   <IconButton
                     aria-label="Search database"
                     size="sm"
@@ -57,6 +61,7 @@ export const Table: React.FC<TableProps> = ({
                     borderRadius="md"
                     icon={<EditIcon />}
                     mr="0.5rem"
+                    onClick={() => onEditClick && onEditClick(item)}
                   />
                   <IconButton
                     size="sm"

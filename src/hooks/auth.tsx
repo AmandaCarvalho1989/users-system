@@ -9,6 +9,7 @@ import React, {
 import { api } from "../services/api";
 import { IUser } from "../types/User";
 import base64 from "base-64";
+import { useToast } from "@chakra-ui/react";
 
 export interface SignInCredentials {
   email: string;
@@ -32,15 +33,12 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const router = useRouter();
-
+  const toast = useToast();
   const [data, setData] = useState<AuthState>({} as AuthState);
-  // const [authState, setAuthState] = useState<AuthState>({} as AuthState);
 
   useEffect(() => {
     const user = localStorage.getItem("@UsersSystem:user");
-    console.log("hook: ", { user });
     if (user) {
-      console.log("tem usuário", JSON.parse(user));
       setData({
         user: JSON.parse(user)[0],
         isAuthenticated: true,
@@ -50,8 +48,6 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    console.log({ email, password });
-
     try {
       const response = await api.get("/users", {
         params: {
@@ -62,19 +58,29 @@ const AuthProvider: React.FC = ({ children }) => {
 
       if (!response.data.length) throw Error();
 
-      // localStorage.setItem("@UsersSystem:token", token);
       localStorage.setItem("@UsersSystem:user", JSON.stringify(response.data));
 
-      //api.defaults.headers.authorization = `Bearer ${token}`;
-
       setData({
-        user: response.data,
+        user: response.data[0],
         isAuthenticated: true,
+      });
+
+      toast({
+        position: "top-right",
+        title: "Sucesso",
+        description: "Login realizado com sucesso",
+        status: "success",
       });
 
       router.push("/");
     } catch (error) {
-      console.log(error);
+      toast({
+        position: "top-right",
+        title: "Erro ao entrar",
+        description: "Usuário não encontrado",
+        status: "error",
+      });
+
       setData({
         user: {} as IUser,
         isAuthenticated: false,

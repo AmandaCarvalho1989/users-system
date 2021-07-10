@@ -11,21 +11,37 @@ import {
   Text,
   InputGroup,
   InputRightElement,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+
+const SigninSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().min(6),
+});
 
 export const SignIn: React.FC = () => {
   const { signIn } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, errors },
+  } = useForm<SignInCredentials>({
+    resolver: yupResolver(SigninSchema),
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
-  const { register, handleSubmit } = useForm();
-
   const onSubmit = async (data: SignInCredentials) => {
-    await signIn(data);
+    if (!isDirty) return;
+    setIsLoading(true);
+    await signIn(data)
+    .finally(() => setIsLoading(false));
   };
 
   return (
@@ -67,6 +83,12 @@ export const SignIn: React.FC = () => {
           <FormControl id="email">
             <FormLabel>Email </FormLabel>
             <Input type="email" {...register("email")} />
+            {errors.email && (
+              <FormHelperText color="red.400">
+                {" "}
+                {errors.email.message}
+              </FormHelperText>
+            )}
           </FormControl>
           <FormControl id="password" pb="24px">
             <FormLabel>Senha</FormLabel>
@@ -87,8 +109,22 @@ export const SignIn: React.FC = () => {
                 </Button>
               </InputRightElement>
             </InputGroup>
+            {errors.password && (
+              <FormHelperText color="red.400">
+                {" "}
+                {errors.password.message}
+              </FormHelperText>
+            )}
           </FormControl>
-          <Button w="full" colorScheme="purple" size="md" type="submit">
+          <Button
+            w="full"
+            colorScheme='purple'
+            disabled={!isDirty || isLoading}
+            size="md"
+            type="submit"
+            isLoading={isLoading}
+            loadingText="Carregando"
+          >
             Entrar
           </Button>
         </VStack>

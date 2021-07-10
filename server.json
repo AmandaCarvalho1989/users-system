@@ -29,6 +29,16 @@
       "password": "MTIzNDU2",
       "role": "USER",
       "id": 3
+    },
+    {
+      "firstName": "Ana",
+      "lastName": "Pereira",
+      "birthDate": "2021-07-01",
+      "document": "55555555555",
+      "email": "ana@gmail.com",
+      "password": "MTIzNDU2",
+      "role": "USER",
+      "id": 4
     }
   ]
 }

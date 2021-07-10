@@ -26,13 +26,13 @@ const menuItems = [
   },
   {
     name: "users",
-    label: "Users",
+    label: "Usuários",
     path: "/users",
     icon: HiUser,
   },
   {
     name: "projects",
-    label: "Projects",
+    label: "Projetos",
     path: "/projects",
     icon: HiAcademicCap,
   },
@@ -89,14 +89,14 @@ export const SideNav: React.FC = () => {
 
       <HStack w="full" color="white" cursor="pointer" onClick={onOpen}>
         <Icon as={HiLogout} w={6} h={6} />
-        <Text>Logout</Text>
+        <Text>Sair</Text>
       </HStack>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         title="Sair da aplicação"
         description="Tem certeza que deseja sair? "
-        primaryButtonText='Sair'
+        primaryButtonText="Sair"
         onActionButtonClick={signOut}
       />
     </VStack>

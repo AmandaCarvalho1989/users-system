@@ -1,5 +1,6 @@
-import React, {  useState } from "react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import React, { useState } from "react";
+import { HiPencilAlt , HiDocument} from "react-icons/hi";
+import { MdSave } from "react-icons/md";
 import {
   Heading,
   VStack,
@@ -12,19 +13,19 @@ import {
   Stack,
   Radio,
   RadioGroup,
-  Image,
+  useToast,
+  Icon,
+  FormErrorMessage
 } from "@chakra-ui/react";
-import { createUser } from "../../services/user";
-import { IUser } from "../../types/User";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { uuid } from "uuidv4";
-import { useToast } from "@chakra-ui/react";
+import { updateUser } from "../../services/user";
+import { IUser } from "../../types/User";
+import { api } from "../../services/api";
 import { useRouter } from "next/dist/client/router";
-import { MdSave } from "react-icons/md";
-
-type CreateUser = Omit<IUser, "id">;
+import { useAuth } from "../../hooks/auth";
+import { FileUpload } from "../../components/InputFile";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -34,12 +35,13 @@ const CreateUserSchema = yup.object().shape({
   role: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(6),
+  picture: yup.string()
 });
 
-export const NewUser: React.FC = () => {
+export const Profile: React.FC = () => {
   const toast = useToast();
   const router = useRouter();
-
+  const { user } = useAuth();
   const [{ alt, src }, setImg] = useState({
     src: "https://king.host/blog/wp-content/plugins/accelerated-mobile-pages/images/SD-default-image.png",
     alt: "Upload an Image",
@@ -62,19 +64,20 @@ export const NewUser: React.FC = () => {
     register,
     handleSubmit,
     formState: { isDirty, errors },
-    setValue,
-  } = useForm<CreateUser>({
+  } = useForm<IUser>({
+    defaultValues: user,
     resolver: yupResolver(CreateUserSchema),
   });
 
-  const onSubmit = async (data: CreateUser) => {
+  const onSubmit = async (data: IUser) => {
     if (!isDirty) return;
-    await createUser(data)
+
+    await updateUser(data)
       .then(() => {
         toast({
           position: "top-right",
           title: "Sucesso",
-          description: "Usuário cadastrado com sucesso",
+          description: "Usuário atualizado com sucesso",
           status: "success",
         });
         router.back();
@@ -83,17 +86,30 @@ export const NewUser: React.FC = () => {
         toast({
           position: "top-right",
           title: "Erro",
-          description: "Houve um erro ao tentar cadastrar.",
+          description: "Houve um erro ao tentar atualizar.",
           status: "success",
         });
       });
   };
 
+  const validateFiles = (value: FileList) => {
+    if (value.length < 1) {
+      return "Files is required";
+    }
+    for (const file of Array.from(value)) {
+      const fsMb = file.size / (1024 * 1024);
+      const MAX_FILE_SIZE = 10;
+      if (fsMb > MAX_FILE_SIZE) {
+        return "Max file size 10mb";
+      }
+    }
+    return true;
+  };
   return (
     <VStack w="full" h="full" p="2rem" alignItems="flex-start" spacing="2rem">
       <Heading size="lg" color="purple.300">
         {" "}
-        Criar usuário
+        Perfil
       </Heading>
       <VStack
         w="full"
@@ -114,6 +130,21 @@ export const NewUser: React.FC = () => {
             position="relative"
             bg="gray.300"
           >
+            <FormControl isInvalid={!!errors.picture} isRequired>
+              <FormLabel>{"File input"}</FormLabel>
+
+              <FileUpload
+                accept={"image/*"}
+                multiple
+                register={register("picture", { validate: validateFiles })}
+              >
+                <Button leftIcon={<Icon as={HiDocument} />}>Upload</Button>
+              </FileUpload>
+
+              <FormErrorMessage>
+                {errors.picture && errors?.picture.message}
+              </FormErrorMessage>
+            </FormControl>
             {/* <Image w="full" h="full" src={src} alt={alt} />
             <label htmlFor="avatar" style={{
               position: 'absolute',
@@ -201,39 +232,30 @@ export const NewUser: React.FC = () => {
             <RadioGroup
               {...register("role")}
               colorScheme="purple"
-              defaultValue='ADMIN'
-              onChange={(e) => setValue("role", e)}
+              defaultValue="ADMIN"
             >
-              {/* <HStack spacing="1rem"> */}
-              <Radio value="ADMIN" defaultChecked>
-                Administrador
-              </Radio>
-              <Radio value="USER">Usuário</Radio>
-              {/* </HStack> */}
+              <HStack spacing="1rem">
+                <Radio value="ADMIN" defaultChecked>
+                  Administrador
+                </Radio>
+                <Radio value="USER">Usuário</Radio>
+              </HStack>
             </RadioGroup>
           </FormControl>
         </HStack>
         <HStack w="full" justifyContent="flex-end" pt="2rem">
           <Button
+            onClick={() => router.push(`/users/edit/${user.id}`)}
             size="md"
-            leftIcon={<MdSave />}
+            leftIcon={<HiPencilAlt />}
             colorScheme="purple"
-            type="submit"
           >
-            Salvar usuário
+            Editar usuário
           </Button>
-          {/* <Button
-            w="sm"
-            leftIcon={<PlusSquareIcon />}
-            colorScheme="purple"
-            onClick={() => ""}
-          >
-            Salvar usuário
-          </Button> */}
         </HStack>
       </VStack>
     </VStack>
   );
 };
 
-export default NewUser;
+export default Profile;

@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { IUser } from "../types/User";
+import {HiTrash, HiPencilAlt} from 'react-icons/hi'
 
 export interface HeaderData {
   key: string;
@@ -59,7 +60,7 @@ export const Table: React.FC<TableProps> = ({
                     variant="outline"
                     colorScheme="purple"
                     borderRadius="md"
-                    icon={<EditIcon />}
+                    icon={<HiPencilAlt />}
                     mr="0.5rem"
                     onClick={() => onEditClick && onEditClick(item)}
                   />
@@ -69,7 +70,7 @@ export const Table: React.FC<TableProps> = ({
                     colorScheme="purple"
                     borderRadius="md"
                     onClick={() => onDeleteClick && onDeleteClick(item)}
-                    icon={<DeleteIcon />}
+                    icon={<HiTrash />}
                   />
                 </Td>
               </Tr>

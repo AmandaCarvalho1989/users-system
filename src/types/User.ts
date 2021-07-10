@@ -7,4 +7,5 @@ export interface IUser {
   document: string;
   password: string;
   role: string;
+  picture?: any;
 }

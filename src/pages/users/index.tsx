@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { HiPlus } from "react-icons/hi";
 import {
   Heading,
   Text,
@@ -12,6 +12,7 @@ import {
   Button,
   useDisclosure,
   useToast,
+  Icon,
 } from "@chakra-ui/react";
 import Table, { HeaderData } from "../../components/Table";
 import { deleteUser, loadUsers } from "../../services/user";
@@ -22,11 +23,11 @@ import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../hooks/auth";
 
 const headers: HeaderData[] = [
-  { key: "name", label: "Name" },
-  { key: "document", label: "Document" },
-  { key: "birthDate", label: "BirthDate" },
+  { key: "name", label: "Nome" },
+  { key: "document", label: "Documento" },
+  { key: "birthDate", label: "Data Nascimento" },
   { key: "email", label: "Email" },
-  { key: "role", label: "Role" },
+  { key: "role", label: "Função" },
 ];
 
 export const Users: React.FC = () => {
@@ -42,10 +43,6 @@ export const Users: React.FC = () => {
   const { user } = useAuth();
 
   const isAdminUser = user ? user.role === "ADMIN" : false;
-
-  useEffect(() => {
-    console.log(user);
-  }, []);
 
   useEffect(() => {
     loadUsers().then((response) => {
@@ -65,6 +62,7 @@ export const Users: React.FC = () => {
     setUserToDelete(user);
     onOpen();
   };
+
   const handleDeleteUser = async (userId: number) => {
     await deleteUser(userId)
       .then(() => {
@@ -97,20 +95,20 @@ export const Users: React.FC = () => {
     <VStack w="full" h="full" p="2rem" alignItems="flex-start">
       <Heading size="lg" color="purple.300">
         {" "}
-        Users
+        Usuários
       </Heading>
       <HStack w="full">
         <FormControl id="user" w="540px">
-          <FormLabel>Search by user name </FormLabel>
+          <FormLabel>Pesquise pelo nome </FormLabel>
           <Input
             type="search"
-            placeholder="Type a name"
+            placeholder="Digite..."
             onChange={(e) => handleSearchByUserName(e.target.value)}
           />
         </FormControl>
         <FormControl id="role">
-          <FormLabel>Search by user name </FormLabel>
-          <Select placeholder="Select option" w="240px">
+          <FormLabel>Selecione a função </FormLabel>
+          <Select w="240px">
             <option value="option1">Todas</option>
             <option value="option2">Admin </option>
             <option value="option3">User</option>
@@ -118,7 +116,8 @@ export const Users: React.FC = () => {
         </FormControl>
         <Button
           w="sm"
-          leftIcon={<PlusSquareIcon />}
+          alignItems="center"
+          leftIcon={<HiPlus />}
           colorScheme="purple"
           onClick={() => router.push("/users/new")}
           display={isAdminUser ? "block" : "none"}

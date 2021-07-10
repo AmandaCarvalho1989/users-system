@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import React, { useState } from "react";
+import { HiTrash } from "react-icons/hi";
+import { MdSave } from "react-icons/md";
 import {
   Heading,
   VStack,
@@ -12,15 +13,14 @@ import {
   Stack,
   Radio,
   RadioGroup,
-  Image,
   useToast,
 } from "@chakra-ui/react";
-import { updateUser } from "../../../services/user";
-import { IUser } from "../../../types/User";
 import { useForm } from "react-hook-form";
+import { GetServerSideProps } from "next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { GetServerSideProps } from "next";
+import { updateUser } from "../../../services/user";
+import { IUser } from "../../../types/User";
 import { api } from "../../../services/api";
 import { useRouter } from "next/dist/client/router";
 
@@ -94,7 +94,7 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
     <VStack w="full" h="full" p="2rem" alignItems="flex-start" spacing="2rem">
       <Heading size="lg" color="purple.300">
         {" "}
-        Criar usuário
+        Editar usuário
       </Heading>
       <VStack
         w="full"
@@ -188,7 +188,7 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
             )}
           </FormControl>
           <FormControl id="password">
-            <FormLabel>Password </FormLabel>
+            <FormLabel>Senha </FormLabel>
             <Input type="password" {...register("password")} />
             {errors.password && (
               <FormHelperText color="red.400">
@@ -198,7 +198,7 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
             )}
           </FormControl>
           <FormControl id="role" pl="1rem">
-            <FormLabel>Nível de acesso </FormLabel>
+            <FormLabel>Função </FormLabel>
             <RadioGroup
               {...register("role")}
               colorScheme="purple"
@@ -214,13 +214,13 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
           </FormControl>
         </HStack>
         <HStack w="full" justifyContent="flex-end" pt="2rem">
-          <Button size="md" leftIcon={<PlusSquareIcon />} colorScheme="red">
+          <Button size="md" leftIcon={<HiTrash />} colorScheme="red">
             Deletar usuário
           </Button>
           <Button
             type="submit"
             size="md"
-            leftIcon={<PlusSquareIcon />}
+            leftIcon={<MdSave />}
             colorScheme="purple"
           >
             Atualizar usuário

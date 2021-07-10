@@ -2,13 +2,24 @@ import React from "react";
 
 import { HStack, Text, VStack, Image } from "@chakra-ui/react";
 import { useAuth } from "../hooks/auth";
+import { useRouter } from "next/dist/client/router";
 
 export const Header: React.FC = () => {
   const { user } = useAuth();
+  const router = useRouter();
+  const handleGoToProfile = () => {
+    router.push("/users/profile");
+  };
 
   return (
     <HStack as="header" bgColor="white" w="full" h="72px" px="64px">
-      <HStack w="full" justifyContent="flex-end" spacing="1rem">
+      <HStack
+        w="full"
+        justifyContent="flex-end"
+        spacing="1rem"
+        cursor="pointer"
+        onClick={handleGoToProfile}
+      >
         <Image
           w="3rem"
           h="3rem"

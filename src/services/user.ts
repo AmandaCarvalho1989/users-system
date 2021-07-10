@@ -16,7 +16,12 @@ const createUser = async (user: Omit<IUser, "id">) => {
   return response.data;
 };
 const updateUser = async (user: IUser) => {
-  const response = await api.patch(`/users/${user.id}`, user);
+  const formattedUser = {
+    ...user,
+    email: String(user.email).toLowerCase(),
+    password: base64.encode(user.password),
+  };
+  const response = await api.patch(`/users/${user.id}`, formattedUser);
   return response.data;
 };
 

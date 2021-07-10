@@ -1,45 +1,62 @@
-import { ReactNode, useRef } from "react";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Icon,
-  InputGroup,
-} from "@chakra-ui/react";
-import { useForm, UseFormRegisterReturn } from "react-hook-form";
-import { FiFile } from "react-icons/fi";
+import { InputProps, Image } from "@chakra-ui/react";
+import { HiCamera } from "react-icons/hi";
+import styled from "styled-components";
+export const AvatarInput = styled.div`
+  width: 192px;
+  height: 192px;
+  margin-bottom: 32px;
+  position: relative;
+  align-self: center;
+  border-radius: 8px;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  label {
+    position: absolute;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background-color: #b185db;
+    right: 0;
+    bottom: 0;
+    transition: background-color 0.2s;
 
-type FileUploadProps = {
-  register: UseFormRegisterReturn;
-  accept?: string;
-  multiple?: boolean;
-  children?: ReactNode;
-};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 
-export const FileUpload = (props: FileUploadProps) => {
-  const { register, accept, multiple, children } = props;
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const { ref, ...rest } = register as {
-    ref: (instance: HTMLInputElement | null) => void;
-  };
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #fafafa;
+    }
+    &:hover {
+      background: #b185db;
+    }
 
-  const handleClick = () => inputRef.current?.click();
+    input {
+      display: none;
+    }
+  }
+`;
 
+interface FileUpload extends InputProps {
+  src: any;
+  alt: string;
+}
+
+export const FileUpload: React.FC<InputProps> = ({ src, alt, onChange }) => {
   return (
-    <InputGroup onClick={handleClick}>
-      <input
-        type={"file"}
-        multiple={multiple || false}
-        hidden
-        accept={accept}
-        {...rest}
-        ref={(e) => {
-          ref(e);
-          inputRef.current = e;
-        }}
-      />
-      <>{children}</>
-    </InputGroup>
+    <AvatarInput>
+      <Image src={src} alt={alt} />
+      <label htmlFor="avatar">
+        <input type="file" id="avatar" onChange={onChange} />
+        <HiCamera />
+      </label>
+    </AvatarInput>
   );
 };

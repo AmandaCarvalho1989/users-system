@@ -23,6 +23,7 @@ import { updateUser } from "../../../services/user";
 import { IUser } from "../../../types/User";
 import { api } from "../../../services/api";
 import { useRouter } from "next/dist/client/router";
+import InputMask from "react-input-mask";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -165,7 +166,11 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input {...register("document")} />
+                <Input
+                  {...register("document")}
+                  // as={InputMask}
+                  // mask="***.***.***-**"
+                />
                 {errors.document && (
                   <FormHelperText color="red.400">
                     {" "}

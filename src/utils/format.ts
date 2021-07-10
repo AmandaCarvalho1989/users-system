@@ -12,3 +12,12 @@ export const formatDocument = (document: string) => {
   // Do the format
   return newDocument.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 };
+
+export const removeDocumentMask = (document: string) => {
+  let newDocument = document;
+
+  // Remove unwanted characters
+  newDocument = document.replace(/[^\d]/g, "");
+
+  return newDocument;
+};

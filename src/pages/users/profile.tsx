@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HiPencilAlt , HiDocument} from "react-icons/hi";
+import { HiPencilAlt, HiDocument } from "react-icons/hi";
 import { MdSave } from "react-icons/md";
 import {
   Heading,
@@ -15,7 +15,7 @@ import {
   RadioGroup,
   useToast,
   Icon,
-  FormErrorMessage
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,7 +35,7 @@ const CreateUserSchema = yup.object().shape({
   role: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(6),
-  picture: yup.string()
+  picture: yup.string(),
 });
 
 export const Profile: React.FC = () => {
@@ -123,23 +123,9 @@ export const Profile: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <HStack w="full" spacing="1rem">
-          <Stack
-            w="240px"
-            h="192px"
-            borderRadius="md"
-            position="relative"
-            bg="gray.300"
-          >
+          <Stack w="240px" h="192px" borderRadius="md" position="relative">
             <FormControl isInvalid={!!errors.picture} isRequired>
-              <FormLabel>{"File input"}</FormLabel>
-
-              <FileUpload
-                accept={"image/*"}
-                multiple
-                register={register("picture", { validate: validateFiles })}
-              >
-                <Button leftIcon={<Icon as={HiDocument} />}>Upload</Button>
-              </FileUpload>
+              <FileUpload src={src} alt={alt} onChange={handleImg} />
 
               <FormErrorMessage>
                 {errors.picture && errors?.picture.message}

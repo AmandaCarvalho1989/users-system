@@ -39,6 +39,16 @@
       "password": "MTIzNDU2",
       "role": "USER",
       "id": 4
+    },
+    {
+      "firstName": "Cintia",
+      "lastName": "Regina",
+      "birthDate": "2021-07-07",
+      "document": "111.111.111-11",
+      "email": "cintia@manda.com",
+      "password": "MTIzNDU2",
+      "role": "USER",
+      "id": 5
     }
   ]
 }

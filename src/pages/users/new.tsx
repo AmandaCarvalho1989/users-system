@@ -1,5 +1,6 @@
-import React, {  useState } from "react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import React, { useState } from "react";
+
+import InputMask from "react-input-mask";
 import {
   Heading,
   VStack,
@@ -12,14 +13,12 @@ import {
   Stack,
   Radio,
   RadioGroup,
-  Image,
 } from "@chakra-ui/react";
 import { createUser } from "../../services/user";
 import { IUser } from "../../types/User";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { uuid } from "uuidv4";
 import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/dist/client/router";
 import { MdSave } from "react-icons/md";
@@ -164,7 +163,11 @@ export const NewUser: React.FC = () => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input {...register("document")} />
+                <Input
+                  {...register("document")}
+                  as={InputMask}
+                  mask="***.***.***-**"
+                />
                 {errors.document && (
                   <FormHelperText color="red.400">
                     {" "}
@@ -201,7 +204,7 @@ export const NewUser: React.FC = () => {
             <RadioGroup
               {...register("role")}
               colorScheme="purple"
-              defaultValue='ADMIN'
+              defaultValue="ADMIN"
               onChange={(e) => setValue("role", e)}
             >
               {/* <HStack spacing="1rem"> */}

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { IUser } from "../types/User";
-import {HiTrash, HiPencilAlt} from 'react-icons/hi'
+import { HiTrash, HiPencilAlt } from "react-icons/hi";
 
 export interface HeaderData {
   key: string;
@@ -37,7 +37,7 @@ export const Table: React.FC<TableProps> = ({
     <ChakraTable variant="striped" colorScheme="gray" bgColor="white" p="1rem">
       <Thead>
         <Tr>
-          {headerData.map((item) => (
+          {headerData.map((item, idx) => (
             <Th key={item.key}>{item.label}</Th>
           ))}
           <Th display={hasPermission ? "block" : "none"}>Actions</Th>
@@ -51,7 +51,12 @@ export const Table: React.FC<TableProps> = ({
             return (
               <Tr key={item.id}>
                 {headerData.map((value, idx) => (
-                  <Td key={idx}>{item[value.key]}</Td>
+                  <Td
+                    key={idx}
+                    //display={["none", "none", " block", "block"]}
+                  >
+                    {item[value.key]}
+                  </Td>
                 ))}
                 <Td display={hasPermission ? "block" : "none"}>
                   <IconButton

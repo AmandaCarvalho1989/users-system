@@ -40,29 +40,43 @@ export const SignIn: React.FC = () => {
   const onSubmit = async (data: SignInCredentials) => {
     if (!isDirty) return;
     setIsLoading(true);
-    await signIn(data)
-    .finally(() => setIsLoading(false));
+    await signIn(data).finally(() => setIsLoading(false));
   };
 
   return (
     <HStack
       w="100vw"
       h="100vh"
-      bgColor="green.600"
       position="relative"
       spacing={0}
+      alignItems="center"
+      justifyContent="center"
+      bgColor="purple.300"
+      p={["1rem", "0"]}
     >
-      <VStack h="full" w="2xl" bgColor="gray.50" position="relative" />
-      <VStack h="full" flex="1" bgColor="purple.300" position="relative" />
+      <VStack
+        display={["none", "none", "block", "block"]}
+        h="full"
+        w="2xl"
+        bgColor="gray.50"
+        position="relative"
+      />
+      <VStack
+        h="full"
+        flex="1"
+        bgColor="purple.300"
+        position="relative"
+        display={["none", "none", "block", "block"]}
+      />
       <VStack
         mt="50"
-        left="20%"
+        left={["0", "0", "20%", "20%"]}
         bg="white"
         w="481px"
         h="552px"
         px="48px"
         zIndex="2"
-        position="absolute"
+        position={["relative", "relative", "absolute", "absolute"]}
         justifyContent="center"
         alignItems="start"
         borderRadius="lg"
@@ -118,7 +132,7 @@ export const SignIn: React.FC = () => {
           </FormControl>
           <Button
             w="full"
-            colorScheme='purple'
+            colorScheme="purple"
             disabled={!isDirty || isLoading}
             size="md"
             type="submit"

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiPencilAlt, HiDocument } from "react-icons/hi";
 import { MdSave } from "react-icons/md";
+import InputMask from "react-input-mask";
 import {
   Heading,
   VStack,
@@ -47,19 +48,6 @@ export const Profile: React.FC = () => {
     alt: "Upload an Image",
   });
 
-  const handleImg = (e: any) => {
-    if (e.target.files[0]) {
-      setImg({
-        src: URL.createObjectURL(e.target.files[0]),
-        alt: e.target.files[0].name,
-      });
-      const data = new FormData();
-      data.append("avatar", e.target.files[0]);
-      // await api.patch('/users/avatar', data).then(response => {
-      //   updateUser(response.data);
-    }
-  };
-
   const {
     register,
     handleSubmit,
@@ -92,22 +80,16 @@ export const Profile: React.FC = () => {
       });
   };
 
-  const validateFiles = (value: FileList) => {
-    if (value.length < 1) {
-      return "Files is required";
-    }
-    for (const file of Array.from(value)) {
-      const fsMb = file.size / (1024 * 1024);
-      const MAX_FILE_SIZE = 10;
-      if (fsMb > MAX_FILE_SIZE) {
-        return "Max file size 10mb";
-      }
-    }
-    return true;
-  };
   return (
-    <VStack w="full" h="full" p="2rem" alignItems="flex-start" spacing="2rem">
-      <Heading size="lg" color="purple.300">
+    <VStack
+      w="full"
+      h="full"
+      px="2rem"
+      py="1rem"
+      alignItems="flex-start"
+      spacing="1rem"
+    >
+      <Heading size="md" color="purple.300">
         {" "}
         Perfil
       </Heading>
@@ -122,34 +104,37 @@ export const Profile: React.FC = () => {
         p="2rem"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <HStack w="full" spacing="1rem">
+        <Stack
+          w="full"
+          spacing="1rem"
+          direction={["column", "column", "row", "row"]}
+          justifyContent="center"
+          alignItems="center"
+        >
           <Stack w="240px" h="192px" borderRadius="md" position="relative">
-            <FormControl isInvalid={!!errors.picture} isRequired>
-              <FileUpload src={src} alt={alt} onChange={handleImg} />
-
-              <FormErrorMessage>
-                {errors.picture && errors?.picture.message}
-              </FormErrorMessage>
-            </FormControl>
-            {/* <Image w="full" h="full" src={src} alt={alt} />
-            <label htmlFor="avatar" style={{
-              position: 'absolute',
-            }}>
-              <Input
-                type="file"
-                id="avatar"
-                onChange={handleImg}
-                display='none'
-               
+            <FormControl
+              isInvalid={!!errors.picture}
+              isRequired
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <FileUpload
+                {...register("picture")}
+                src={user.picture}
+                isReadOnly
               />
-              <Button>+</Button>
-            </label> */}
+
+              <FormHelperText>
+                {errors.picture && errors?.picture.message}
+              </FormHelperText>
+            </FormControl>
           </Stack>
           <VStack w="full">
-            <HStack w="full">
+            <Stack direction={["column", "column", "row", "row"]} w="full">
               <FormControl id="firstName">
                 <FormLabel>Nome </FormLabel>
-                <Input type="firstName" {...register("firstName")} />
+                <Input readOnly {...register("firstName")} />
                 {errors.firstName && (
                   <FormHelperText color="red.400">
                     {" "}
@@ -159,7 +144,7 @@ export const Profile: React.FC = () => {
               </FormControl>
               <FormControl id="lastName">
                 <FormLabel>Sobrenome </FormLabel>
-                <Input {...register("lastName")} />
+                <Input readOnly {...register("lastName")} />
                 {errors.lastName && (
                   <FormHelperText color="red.400">
                     {" "}
@@ -167,11 +152,11 @@ export const Profile: React.FC = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-            </HStack>
-            <HStack w="full">
+            </Stack>
+            <Stack direction={["column", "column", "row", "row"]} w="full">
               <FormControl id="birthDate">
                 <FormLabel>Data Nascimento </FormLabel>
-                <Input type="date" {...register("birthDate")} />
+                <Input readOnly type="date" {...register("birthDate")} />
                 {errors.birthDate && (
                   <FormHelperText color="red.400">
                     {" "}
@@ -181,7 +166,12 @@ export const Profile: React.FC = () => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input {...register("document")} />
+                <Input
+                  readOnly
+                  {...register("document")}
+                  as={InputMask}
+                  mask="***.***.***-**"
+                />
                 {errors.document && (
                   <FormHelperText color="red.400">
                     {" "}
@@ -189,13 +179,13 @@ export const Profile: React.FC = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-            </HStack>
+            </Stack>
           </VStack>
-        </HStack>
-        <HStack w="full">
+        </Stack>
+        <Stack direction={["column", "column", "row", "row"]} w="full">
           <FormControl id="email">
             <FormLabel>Email </FormLabel>
-            <Input type="email" {...register("email")} />
+            <Input type="email" readOnly {...register("email")} />
             {errors.email && (
               <FormHelperText color="red.400">
                 {" "}
@@ -205,7 +195,7 @@ export const Profile: React.FC = () => {
           </FormControl>
           <FormControl id="password">
             <FormLabel>Senha </FormLabel>
-            <Input type="password" {...register("password")} />
+            <Input type="password" readOnly {...register("password")} />
             {errors.password && (
               <FormHelperText color="red.400">
                 {" "}
@@ -218,17 +208,17 @@ export const Profile: React.FC = () => {
             <RadioGroup
               {...register("role")}
               colorScheme="purple"
-              defaultValue="ADMIN"
+              value={user.role}
             >
-              <HStack spacing="1rem">
-                <Radio value="ADMIN" defaultChecked>
-                  Administrador
-                </Radio>
-                <Radio value="USER">Usuário</Radio>
-              </HStack>
+              <Radio value="ADMIN" defaultChecked={user.role === "ADMIN"}>
+                Administrador
+              </Radio>
+              <Radio value="USER" defaultChecked={user.role === "USER"}>
+                Usuário
+              </Radio>
             </RadioGroup>
           </FormControl>
-        </HStack>
+        </Stack>
         <HStack w="full" justifyContent="flex-end" pt="2rem">
           <Button
             onClick={() => router.push(`/users/edit/${user.id}`)}

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import {
-  Heading,
   Text,
   VStack,
   HStack,
   FormControl,
   FormLabel,
   Input,
-  Select,
   Button,
   useDisclosure,
   useToast,
-  Icon,
+  Stack,
+  Box,
+  Image,
+  SimpleGrid,
 } from "@chakra-ui/react";
+import { usePaginator } from "chakra-paginator";
 import Table, { HeaderData } from "../../components/Table";
 import { deleteUser, loadUsers } from "../../services/user";
 import { formatDate, formatDocument } from "../../utils/format";
@@ -21,6 +23,9 @@ import { Modal } from "../../components/Modal";
 import { IUser } from "../../types/User";
 import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../hooks/auth";
+import Pagination from "../../components/Pagination";
+import CardViewContainer from "../../components/CardViewContainer";
+import SwitchViewButtons from "../../components/SwitchViewButtons";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -33,30 +38,40 @@ const headers: HeaderData[] = [
 export const Users: React.FC = () => {
   const [data, setData] = useState<Array<any>>([]);
   const [showData, setShowData] = useState<Array<any>>([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [userToDelete, setUserToDelete] = useState<IUser | undefined>(
     undefined
   );
+  const [viewMode, setViewMode] = useState("card");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
   const { user } = useAuth();
 
+  const { pagesQuantity, currentPage, setCurrentPage } = usePaginator({
+    total: totalPages,
+    initialState: {
+      pageSize: 5,
+      currentPage: 1,
+    },
+  });
+
   const isAdminUser = user ? user.role === "ADMIN" : false;
 
   useEffect(() => {
-    loadUsers().then((response) => {
-      const formattedData = response.map((item: any) => ({
+    loadUsers(currentPage).then((response) => {
+      const formattedData = response.data.map((item: any) => ({
         ...item,
         birthDate: formatDate(item.birthDate),
         document: formatDocument(item.document),
         name: item.firstName + " " + item.lastName,
       }));
-
+      setTotalPages(response.headers["x-total-count"]);
       setData(formattedData);
       setShowData(formattedData);
     });
-  }, [isOpen]);
+  }, [isOpen, currentPage]);
 
   const handleOpenDeleteModal = async (user: IUser) => {
     setUserToDelete(user);
@@ -92,13 +107,15 @@ export const Users: React.FC = () => {
   };
 
   return (
-    <VStack w="full" h="full" p="2rem" alignItems="flex-start">
-      <Heading size="lg" color="purple.300">
-        {" "}
-        Usuários
-      </Heading>
-      <HStack w="full">
-        <FormControl id="user" w="540px">
+    <VStack
+      w="full"
+      h="full"
+      px={["2rem", "1.3rem"]}
+      py={["1.5rem", "0.8rem"]}
+      alignItems="flex-start"
+    >
+      <HStack w="full" justifyContent="space-between" alignItems="center">
+        <FormControl id="user" w="lg">
           <FormLabel>Pesquise pelo nome </FormLabel>
           <Input
             type="search"
@@ -106,45 +123,50 @@ export const Users: React.FC = () => {
             onChange={(e) => handleSearchByUserName(e.target.value)}
           />
         </FormControl>
-        <FormControl id="role">
-          <FormLabel>Selecione a função </FormLabel>
-          <Select w="240px">
-            <option value="option1">Todas</option>
-            <option value="option2">Admin </option>
-            <option value="option3">User</option>
-          </Select>
-        </FormControl>
-        <Button
-          w="sm"
-          alignItems="center"
-          leftIcon={<HiPlus />}
-          colorScheme="purple"
-          onClick={() => router.push("/users/new")}
-          display={isAdminUser ? "block" : "none"}
-        >
-          Criar usuário
-        </Button>
-      </HStack>
-      <VStack h="full" w="full" py="3rem">
-        <Table
-          headerData={headers}
-          bodyData={showData}
-          onDeleteClick={handleOpenDeleteModal}
-          onEditClick={(user) => router.push(`/users/edit/${user.id}`)}
-          hasPermission={isAdminUser}
-        />
+        <SwitchViewButtons />
 
-        {userToDelete && (
-          <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            title="Deletar usuário"
-            description={`Tem certeza que deseja deletar o usuário " ${userToDelete.firstName} " `}
-            primaryButtonText="Deletar"
-            onActionButtonClick={() => handleDeleteUser(userToDelete.id)}
+        <Stack pt="2rem">
+          <Button
+            size="md"
+            alignItems="center"
+            leftIcon={<HiPlus />}
+            colorScheme="purple"
+            onClick={() => router.push("/users/new")}
+            display={isAdminUser ? "block" : "none"}
+          >
+            Criar usuário
+          </Button>
+        </Stack>
+      </HStack>
+      <VStack h="full" w="full" py={["3rem", "1rem"]}>
+        {viewMode == "card" ? (
+          <CardViewContainer data={showData} />
+        ) : (
+          <Table
+            headerData={headers}
+            bodyData={showData}
+            onDeleteClick={handleOpenDeleteModal}
+            onEditClick={(user) => router.push(`/users/edit/${user.id}`)}
+            hasPermission={isAdminUser}
           />
         )}
+        <Pagination
+          dataQuantity={totalPages}
+          currentPage={currentPage}
+          pagesQuantity={pagesQuantity}
+          onPageChange={setCurrentPage}
+        />
       </VStack>
+      {userToDelete && (
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          title="Deletar usuário"
+          description={`Tem certeza que deseja deletar o usuário " ${userToDelete.firstName} " `}
+          primaryButtonText="Deletar"
+          onActionButtonClick={() => handleDeleteUser(userToDelete.id)}
+        />
+      )}
     </VStack>
   );
 };

@@ -3,9 +3,9 @@ import { api } from "./api";
 import base64 from "base-64";
 import { removeDocumentMask } from "../utils/format";
 
-const loadUsers = async () => {
-  const response = await api.get("/users");
-  return response.data;
+const loadUsers = async (page: number) => {
+  const response = await api.get("/users?_page=" + page + "&_limit=5");
+  return response;
 };
 const createUser = async (user: Omit<IUser, "id">) => {
   const formattedUser = {

@@ -1,4 +1,6 @@
 import { InputProps, Image } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { HiCamera } from "react-icons/hi";
 import styled from "styled-components";
 export const AvatarInput = styled.div`
@@ -20,8 +22,8 @@ export const AvatarInput = styled.div`
     width: 48px;
     border-radius: 50%;
     background-color: #b185db;
-    right: 0;
-    bottom: 0;
+    right: -6px;
+    bottom: -6px;
     transition: background-color 0.2s;
 
     display: flex;
@@ -44,19 +46,49 @@ export const AvatarInput = styled.div`
   }
 `;
 
-interface FileUpload extends InputProps {
+interface FileUpload extends Omit<InputProps, "onChange"> {
   src: any;
-  alt: string;
+  alt?: string;
+  onChange: (image: string) => void;
 }
 
-export const FileUpload: React.FC<InputProps> = ({ src, alt, onChange }) => {
+export const FileUpload: React.FC<FileUpload> = ({
+  src,
+  alt,
+  isReadOnly,
+  onChange,
+}) => {
+  const [image, setImage] = useState(src);
+
+  useEffect(() => {
+    setImage(src);
+  }, [src]);
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = (e) => onChange(e.target ? String(e.target.result) : "");
+  };
+
   return (
     <AvatarInput>
-      <Image src={src} alt={alt} />
-      <label htmlFor="avatar">
-        <input type="file" id="avatar" onChange={onChange} />
-        <HiCamera />
-      </label>
+      <Image src={image || "/images/placeholder.png"} alt={alt} />
+
+      {!isReadOnly && (
+        <label htmlFor="avatar">
+          <input
+            type="file"
+            id="avatar"
+            accept="image/*"
+            onChange={(e) => handleImageChange(e)}
+          />
+          <HiCamera />
+        </label>
+      )}
     </AvatarInput>
   );
 };

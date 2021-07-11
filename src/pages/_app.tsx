@@ -11,7 +11,7 @@ import { AuthProvider, useAuth } from "../hooks/auth";
 import { Header } from "../components/Header";
 import { SideNav } from "../components/SideNav";
 import theme from "../styles/theme";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { route } = useRouter();

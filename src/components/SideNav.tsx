@@ -13,8 +13,8 @@ import {
   useDisclosure,
   Stack,
 } from "@chakra-ui/react";
-import { HiTemplate, HiUser, HiAcademicCap, HiLogout } from "react-icons/hi";
-import { useRouter } from "next/dist/client/router";
+import { HiTemplate, HiUser, HiLogout } from "react-icons/hi";
+import { useRouter } from "next/router";
 import { useAuth } from "../hooks/auth";
 import { Modal } from "./Modal";
 import { useMediaQuery } from "@chakra-ui/react";

@@ -14,17 +14,20 @@ import {
   Radio,
   RadioGroup,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { updateUser } from "../../../services/user";
+import { deleteUser, updateUser } from "../../../services/user";
 import { IUser } from "../../../types/User";
 import { api } from "../../../services/api";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import InputMask from "react-input-mask";
 import { FileUpload } from "../../../components/InputFile";
+import { Modal } from "../../../components/Modal";
+import { useAuth } from "../../../hooks/auth";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -44,6 +47,9 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
 
   const toast = useToast();
   const router = useRouter();
+  const { signOut } = useAuth();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     register,
@@ -58,13 +64,14 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
   const onSubmit = async (data: IUser) => {
     if (!isDirty) return;
     await updateUser({ ...data, picture: img })
-      .then(() => {
+      .then((response) => {
         toast({
           position: "top-right",
           title: "Sucesso",
           description: "Usuário atualizado com sucesso",
           status: "success",
         });
+        updateUser(response);
         router.back();
       })
       .catch(() => {
@@ -72,6 +79,28 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
           position: "top-right",
           title: "Erro",
           description: "Houve um erro ao tentar atualizar.",
+          status: "success",
+        });
+      });
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    await deleteUser(userId)
+      .then(() => {
+        onClose();
+        toast({
+          position: "top-right",
+          title: "Sucesso",
+          description: "Usuário deletado com sucesso",
+          status: "success",
+        });
+        signOut();
+      })
+      .catch(() => {
+        toast({
+          position: "top-right",
+          title: "Erro",
+          description: "Houve um erro ao tentar deletar o usuáriou.",
           status: "success",
         });
       });
@@ -216,7 +245,12 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
         </Stack>
 
         <HStack w="full" justifyContent="flex-end" pt="2rem">
-          <Button size="md" leftIcon={<HiTrash />} colorScheme="red">
+          <Button
+            size="md"
+            leftIcon={<HiTrash />}
+            colorScheme="red"
+            onClick={onOpen}
+          >
             Deletar usuário
           </Button>
           <Button
@@ -229,6 +263,15 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
           </Button>
         </HStack>
       </VStack>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Deletar usuário"
+        description={`Tem certeza que deseja deletar o usuário " ${user.firstName} "? Você será deslogado após fazer isso `}
+        primaryButtonText="Deletar"
+        onActionButtonClick={() => handleDeleteUser(user.id)}
+      />
     </VStack>
   );
 };

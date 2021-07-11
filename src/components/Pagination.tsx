@@ -4,7 +4,6 @@ import {
   Paginator,
   Container,
   Previous,
-  usePaginator,
   Next,
   PageGroup,
 } from "chakra-paginator";
@@ -24,7 +23,7 @@ const Pagination: React.FC<PaginationProps> = ({
   dataQuantity,
   onPageChange,
 }) => {
-  // styles
+
   const baseStyles: ButtonProps = {
     w: 8,
     h: 8,

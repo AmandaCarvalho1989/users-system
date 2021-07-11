@@ -3,14 +3,11 @@ import {
   Table as ChakraTable,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
   IconButton,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { IUser } from "../types/User";
 import { HiTrash, HiPencilAlt } from "react-icons/hi";
 

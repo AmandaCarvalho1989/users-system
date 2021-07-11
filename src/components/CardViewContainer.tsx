@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Text, HStack, Box, Image, SimpleGrid, Stack } from "@chakra-ui/react";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
+import { useAuth } from "../hooks/auth";
 
 interface CardViewContainer {
   data: Array<any>;
@@ -10,11 +11,14 @@ interface CardViewContainer {
 const CardViewContainer: React.FC<CardViewContainer> = ({ data }) => {
   const router = useRouter();
 
+  const { user } = useAuth();
+
+  const isAdminUser = user ? user.role === "ADMIN" : false;
   return (
     <SimpleGrid columns={[2, null, 3]} spacing="1rem">
       {data.map((item) => (
         <HStack
-          cursor="pointer"
+          cursor={isAdminUser ? "pointer" : "default"}
           minW="full"
           w={["full", "full", "full", "350px"]}
           key={item.id}
@@ -24,7 +28,7 @@ const CardViewContainer: React.FC<CardViewContainer> = ({ data }) => {
           borderRadius="md"
           h={["auto", "100px"]}
           alignItems="center"
-          onClick={() => router.push(`/users/edit/${item.id}`)}
+          onClick={() => isAdminUser && router.push(`/users/edit/${item.id}`)}
         >
           <Image
             borderRadius="lg"

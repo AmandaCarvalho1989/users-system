@@ -19,14 +19,14 @@ import { deleteUser, loadUsers } from "../../services/user";
 import { formatDate, formatDocument } from "../../utils/format";
 import { Modal } from "../../components/Modal";
 import { IUser } from "../../types/User";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import { useAuth } from "../../hooks/auth";
 import Pagination from "../../components/Pagination";
 import CardViewContainer from "../../components/CardViewContainer";
-import SwitchViewButtons, {
-  ViewsType,
-} from "../../components/SwitchViewButtons";
-import TransformControlsModeRadio from "../../components/SwitchViewButtons";
+import { ViewsType } from "../../components/SwitchViewButtons";
+import { SwitchViewButtons } from "../../components/SwitchViewButtons";
+import { GetServerSideProps } from "next";
+import { api } from "../../services/api";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -36,14 +36,18 @@ const headers: HeaderData[] = [
   { key: "role", label: "Função" },
 ];
 
-export const Users: React.FC = () => {
-  const [data, setData] = useState<Array<any>>([]);
+interface UsersPageProps {
+  users: Array<IUser>;
+}
+
+export const Users: React.FC<UsersPageProps> = ({ users }) => {
+  const [data, setData] = useState<Array<any>>(users);
   const [showData, setShowData] = useState<Array<any>>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [userToDelete, setUserToDelete] = useState<IUser | undefined>(
     undefined
   );
-  const [viewMode, setViewMode] = useState<ViewsType>("card");
+  const [viewMode, setViewMode] = useState<ViewsType>("grid");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
@@ -73,6 +77,8 @@ export const Users: React.FC = () => {
       setData(formattedData);
       setShowData(formattedData);
     });
+
+    return () => {};
   }, [isOpen, currentPage]);
 
   const handleOpenDeleteModal = async (user: IUser) => {
@@ -128,16 +134,15 @@ export const Users: React.FC = () => {
             />
           </FormControl>
 
-          <TransformControlsModeRadio value={viewMode} onChange={setViewMode} />
+          <SwitchViewButtons value={viewMode} onChange={setViewMode} />
         </HStack>
         <Stack pt="2rem">
           <Button
-            size="md"
-            alignItems="center"
             leftIcon={<HiPlus />}
             colorScheme="purple"
+            variant="solid"
             onClick={() => router.push("/users/new")}
-            display={isAdminUser ? "block" : "none"}
+            display={isAdminUser ? "flex" : "none"}
           >
             Criar usuário
           </Button>
@@ -177,3 +182,21 @@ export const Users: React.FC = () => {
 };
 
 export default Users;
+
+export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (
+  context
+) => {
+  const response = await loadUsers(1);
+  const formattedData = response.data.map((item: any) => ({
+    ...item,
+    birthDate: formatDate(item.birthDate),
+    document: formatDocument(item.document),
+    name: item.firstName + " " + item.lastName,
+  }));
+
+  return {
+    props: {
+      users: formattedData,
+    }, // will be passed to the page component as props
+  };
+};

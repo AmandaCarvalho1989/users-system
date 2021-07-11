@@ -21,7 +21,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import { MdSave } from "react-icons/md";
 import { FileUpload } from "../../components/InputFile";
 
@@ -107,14 +107,13 @@ export const NewUser: React.FC = () => {
           <Stack w="240px" h="192px" borderRadius="md" position="relative">
             <FormControl
               isInvalid={!!errors.picture}
-              isRequired
               display="flex"
               alignItems="center"
               justifyContent="center"
             >
               <FileUpload
-                src={img}
                 {...register("picture")}
+                src={img}
                 onChange={(e) => setImg(e)}
               />
 
@@ -127,7 +126,7 @@ export const NewUser: React.FC = () => {
             <Stack direction={["column", "column", "row", "row"]} w="full">
               <FormControl id="firstName">
                 <FormLabel>Nome </FormLabel>
-                <Input  {...register("firstName")} />
+                <Input {...register("firstName")} />
                 {errors.firstName && (
                   <FormHelperText color="red.400">
                     {" "}

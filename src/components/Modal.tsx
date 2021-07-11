@@ -11,8 +11,6 @@ import {
   ModalProps as ChakraModalProps,
   Text,
 } from "@chakra-ui/react";
-import { IUser } from "../types/User";
-import { deleteUser } from "../services/user";
 
 interface ModalProps extends Omit<ChakraModalProps, "children"> {
   title: string;

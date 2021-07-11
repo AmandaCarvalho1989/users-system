@@ -1,4 +1,4 @@
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import React, {
   createContext,
   useCallback,
@@ -20,12 +20,9 @@ interface AuthContextData {
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   updateUser: (user: IUser) => void;
-
-  isAuthenticated: boolean;
 }
 
 interface AuthState {
-  isAuthenticated: boolean;
   user: IUser;
 }
 
@@ -41,13 +38,13 @@ const AuthProvider: React.FC = ({ children }) => {
     if (user) {
       setData({
         user: JSON.parse(user)[0],
-        isAuthenticated: true,
       });
       router.push("/");
     } else router.push("/signin");
+    return () => {};
   }, []);
 
-  const signIn = useCallback(async ({ email, password }) => {
+  const signIn = async ({ email, password }: SignInCredentials) => {
     try {
       const response = await api.get("/users", {
         params: {
@@ -62,7 +59,6 @@ const AuthProvider: React.FC = ({ children }) => {
 
       setData({
         user: response.data[0],
-        isAuthenticated: true,
       });
 
       toast({
@@ -83,18 +79,17 @@ const AuthProvider: React.FC = ({ children }) => {
 
       setData({
         user: {} as IUser,
-        isAuthenticated: false,
       });
     }
-  }, []);
+  };
 
-  const signOut = useCallback(() => {
+  const signOut = () => {
     localStorage.removeItem("@UsersSystem:token");
     localStorage.removeItem("@UsersSystem:user");
 
     setData({} as AuthState);
     router.push("/signin");
-  }, []);
+  };
 
   const updateUser = (user: IUser) => {
     localStorage.setItem("@UsersSystem:user", JSON.stringify(user));
@@ -111,8 +106,6 @@ const AuthProvider: React.FC = ({ children }) => {
         signIn,
         signOut,
         updateUser,
-
-        isAuthenticated: data.isAuthenticated,
       }}
     >
       {children}

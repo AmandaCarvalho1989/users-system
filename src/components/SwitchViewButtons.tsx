@@ -41,12 +41,12 @@ const RadioCard: FC<RadioCardProps> = (props) => {
   );
 };
 
-export interface TransformControlsModeRadioProps {
+export interface SwitchViewButtonsProps {
   value: ViewsType;
   onChange: (value: ViewsType) => void;
 }
 
-const TransformControlsModeRadio: FC<TransformControlsModeRadioProps> = ({
+export const SwitchViewButtons: FC<SwitchViewButtonsProps> = ({
   value,
   onChange,
 }) => {
@@ -79,4 +79,4 @@ const TransformControlsModeRadio: FC<TransformControlsModeRadioProps> = ({
   );
 };
 
-export default TransformControlsModeRadio;
+export default SwitchViewButtons;

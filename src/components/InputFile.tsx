@@ -1,8 +1,8 @@
-import { InputProps, Image } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { InputProps, Image, Input } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { HiCamera } from "react-icons/hi";
 import styled from "styled-components";
+
 export const AvatarInput = styled.div`
   width: 192px;
   height: 192px;
@@ -62,6 +62,7 @@ export const FileUpload: React.FC<FileUpload> = ({
 
   useEffect(() => {
     setImage(src);
+    return () => {};
   }, [src]);
 
   const handleImageChange = (e: any) => {
@@ -79,10 +80,11 @@ export const FileUpload: React.FC<FileUpload> = ({
       <Image src={image || "/images/placeholder.png"} alt={alt} />
 
       {!isReadOnly && (
-        <label htmlFor="avatar">
-          <input
+        <label htmlFor="picture">
+          <Input
             type="file"
-            id="avatar"
+            id="picture"
+            name="picture"
             accept="image/*"
             onChange={(e) => handleImageChange(e)}
           />

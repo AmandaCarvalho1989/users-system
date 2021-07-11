@@ -24,7 +24,7 @@ import * as yup from "yup";
 import { updateUser } from "../../services/user";
 import { IUser } from "../../types/User";
 import { api } from "../../services/api";
-import { useRouter } from "next/dist/client/router";
+import { useRouter } from "next/router";
 import { useAuth } from "../../hooks/auth";
 import { FileUpload } from "../../components/InputFile";
 
@@ -43,11 +43,7 @@ export const Profile: React.FC = () => {
   const toast = useToast();
   const router = useRouter();
   const { user } = useAuth();
-  const [{ alt, src }, setImg] = useState({
-    src: "https://king.host/blog/wp-content/plugins/accelerated-mobile-pages/images/SD-default-image.png",
-    alt: "Upload an Image",
-  });
-
+ 
   const {
     register,
     handleSubmit,
@@ -121,7 +117,7 @@ export const Profile: React.FC = () => {
             >
               <FileUpload
                 {...register("picture")}
-                src={user.picture}
+                src={user?.picture || "/images/placeholder.png"}
                 isReadOnly
               />
 
@@ -208,12 +204,12 @@ export const Profile: React.FC = () => {
             <RadioGroup
               {...register("role")}
               colorScheme="purple"
-              value={user.role}
+              value={user?.role}
             >
-              <Radio value="ADMIN" defaultChecked={user.role === "ADMIN"}>
+              <Radio value="ADMIN" defaultChecked={user?.role === "ADMIN"}>
                 Administrador
               </Radio>
-              <Radio value="USER" defaultChecked={user.role === "USER"}>
+              <Radio value="USER" defaultChecked={user?.role === "USER"}>
                 Usuário
               </Radio>
             </RadioGroup>

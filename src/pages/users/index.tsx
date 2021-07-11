@@ -11,9 +11,7 @@ import {
   useDisclosure,
   useToast,
   Stack,
-  Box,
-  Image,
-  SimpleGrid,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { usePaginator } from "chakra-paginator";
 import Table, { HeaderData } from "../../components/Table";
@@ -25,7 +23,10 @@ import { useRouter } from "next/dist/client/router";
 import { useAuth } from "../../hooks/auth";
 import Pagination from "../../components/Pagination";
 import CardViewContainer from "../../components/CardViewContainer";
-import SwitchViewButtons from "../../components/SwitchViewButtons";
+import SwitchViewButtons, {
+  ViewsType,
+} from "../../components/SwitchViewButtons";
+import TransformControlsModeRadio from "../../components/SwitchViewButtons";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -42,12 +43,13 @@ export const Users: React.FC = () => {
   const [userToDelete, setUserToDelete] = useState<IUser | undefined>(
     undefined
   );
-  const [viewMode, setViewMode] = useState("card");
+  const [viewMode, setViewMode] = useState<ViewsType>("card");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
   const { user } = useAuth();
+  const [isLargerThan1900] = useMediaQuery("(min-width: 900px)");
 
   const { pagesQuantity, currentPage, setCurrentPage } = usePaginator({
     total: totalPages,
@@ -115,16 +117,19 @@ export const Users: React.FC = () => {
       alignItems="flex-start"
     >
       <HStack w="full" justifyContent="space-between" alignItems="center">
-        <FormControl id="user" w="lg">
-          <FormLabel>Pesquise pelo nome </FormLabel>
-          <Input
-            type="search"
-            placeholder="Digite..."
-            onChange={(e) => handleSearchByUserName(e.target.value)}
-          />
-        </FormControl>
-        <SwitchViewButtons />
+        <HStack w="full" alignItems="flex-end">
+          <FormControl id="user" w={["min-content", "min-content", "md", "md"]}>
+            <FormLabel>Pesquise pelo nome </FormLabel>
+            <Input
+              w={["min-content", "min-content", "md", "md"]}
+              type="search"
+              placeholder="Digite..."
+              onChange={(e) => handleSearchByUserName(e.target.value)}
+            />
+          </FormControl>
 
+          <TransformControlsModeRadio value={viewMode} onChange={setViewMode} />
+        </HStack>
         <Stack pt="2rem">
           <Button
             size="md"
@@ -138,8 +143,8 @@ export const Users: React.FC = () => {
           </Button>
         </Stack>
       </HStack>
-      <VStack h="full" w="full" py={["3rem", "1rem"]}>
-        {viewMode == "card" ? (
+      <VStack h="full" w="full" py={"1rem"}>
+        {viewMode == "card" || !isLargerThan1900 ? (
           <CardViewContainer data={showData} />
         ) : (
           <Table

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, HStack, Box, Image, SimpleGrid } from "@chakra-ui/react";
+import { Text, HStack, Box, Image, SimpleGrid, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/dist/client/router";
 
 interface CardViewContainer {
@@ -22,7 +22,7 @@ const CardViewContainer: React.FC<CardViewContainer> = ({ data }) => {
           display={{ md: "flex" }}
           bgColor="white"
           borderRadius="md"
-          h="100px"
+          h={["auto", "100px"]}
           alignItems="center"
           onClick={() => router.push(`/users/edit/${item.id}`)}
         >
@@ -31,6 +31,7 @@ const CardViewContainer: React.FC<CardViewContainer> = ({ data }) => {
             width={20}
             height={20}
             objectFit="cover"
+            display={["none", "none", "none", "block"]}
             src={item.picture || "/images/placeholder.png"}
             alt={item.name}
           />
@@ -44,15 +45,15 @@ const CardViewContainer: React.FC<CardViewContainer> = ({ data }) => {
               {item.name} - {item.role}
             </Text>
 
-            <HStack>
+            <Stack direction={["column", "row"]}>
               <Text color="gray.500" fontSize="sm">
                 {item.birthDate}
               </Text>
               <Text color="gray.500" fontSize="sm">
                 {" "}
-                - {item.document}
+                {item.document}
               </Text>
-            </HStack>
+            </Stack>
             <Text color="gray.500" fontSize="sm">
               {" "}
               {item.email}

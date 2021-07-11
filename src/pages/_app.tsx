@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             maxH="100vh"
             bgColor="gray.50"
             spacing={0}
-            overflow={["auto", "hidden", "hidden", "hidden"]}
+            overflow={["auto", "auto", "hidden", "hidden"]}
           >
             <SideNav />
             <VStack

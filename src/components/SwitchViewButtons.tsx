@@ -1,74 +1,82 @@
-import React from "react";
+import React, { ReactElement, FC } from "react";
 import {
-  Radio,
-  RadioGroup,
+  Button,
+  ButtonGroup,
   useRadio,
-  Box,
-  UseRadioProps,
-  HStack,
   useRadioGroup,
-  RadioProps,
+  UseRadioProps,
 } from "@chakra-ui/react";
+import { HiViewGrid, HiMenuAlt2 } from "react-icons/hi";
+import { IconType } from "react-icons";
 
-const SwitchViewButtons: React.FC<UseRadioProps> = (props) => {
+export type ViewsType = "card" | "grid";
+
+interface RadioCardProps extends UseRadioProps {
+  label: string;
+  icon: ReactElement<IconType>;
+}
+
+const RadioCard: FC<RadioCardProps> = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
 
+  return (
+    <>
+      <Button
+        size="md"
+        leftIcon={props.icon}
+        as="label"
+        {...checkbox}
+        _checked={{
+          bg: "purple.500",
+          color: "white",
+        }}
+      >
+        {props.label}
+        <input {...input} />
+      </Button>
+    </>
+  );
+};
+
+export interface TransformControlsModeRadioProps {
+  value: ViewsType;
+  onChange: (value: ViewsType) => void;
+}
+
+const TransformControlsModeRadio: FC<TransformControlsModeRadioProps> = ({
+  value,
+  onChange,
+}) => {
   const { getRootProps, getRadioProps } = useRadioGroup({
-    name: "viwe",
-    defaultValue: "grid",
-    onChange: console.log,
+    name: "transformControlsMode",
+    value,
+    onChange,
   });
 
   const group = getRootProps();
 
-  const options = ["card", "grid"];
-
   return (
-    <HStack {...group}>
-      {options.map((value) => {
-        const radio = getRadioProps({ value });
-        return (
-          <RadioCard key={value} {...radio}>
-            {value}
-          </RadioCard>
-        );
-      })}
-    </HStack>
+    <ButtonGroup
+      {...group}
+      isAttached
+      display={["none", "none", "flex", "flex"]}
+    >
+      <RadioCard
+        {...getRadioProps({ value: "grid" })}
+        label="Grid"
+        icon={<HiMenuAlt2 />}
+      />
+
+      <RadioCard
+        {...getRadioProps({ value: "card" })}
+        label="Card"
+        icon={<HiViewGrid />}
+      />
+    </ButtonGroup>
   );
 };
 
-function RadioCard(props: RadioProps) {
-  const { getInputProps, getCheckboxProps } = useRadio(props);
-
-  const input = getInputProps();
-  const checkbox = getCheckboxProps();
-
-  return (
-    <Box as="label">
-      <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        borderWidth="1px"
-        borderRadius="md"
-        h='48px'
-        _checked={{
-          bg: "teal.600",
-          color: "white",
-          borderColor: "teal.600",
-        }}
-        _focus={{
-          boxShadow: "outline",
-        }}
-        p={3}
-      >
-        {props.children}
-      </Box>
-    </Box>
-  );
-}
-
-export default SwitchViewButtons;
+export default TransformControlsModeRadio;

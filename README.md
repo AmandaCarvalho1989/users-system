@@ -6,7 +6,7 @@
 ## 💻 Sobre
 
 O UsersSystem é um projeto de desafio passado pela Softplan.
- O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
+O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
 
 
 ### Requisitos exigidos:
@@ -80,7 +80,7 @@ Utilizei as seguintes tecnologias:
 
 ## Utilização do projeto
 
-### 📁 Baixar o projeto
+### 🔧 Baixar o projeto
 
 Faça o clone do repositório para ter uma versão do projeto em sua máquina
 
@@ -89,7 +89,7 @@ $ git clone hhttps://github.com/AmandaCarvalho1989/users-system.git && cd users-
 ```
 
 
-### 🧰 Instalar dependências
+### 📃 Instalar dependências
 
 Inclua no projeto as bibliotecas externas 
 
@@ -99,7 +99,7 @@ $ yarn
 $ npm install
 ```
 
-### 📀 Gerar uma versão funcional
+### 💡 Gerar uma versão funcional
 
 O userManager ja está pronto, portanto não precisamos executa-lo em ambiente de desenvolvimento, por isso podemos gerar uma versão de build para ter a melhor experiência com a aplicação:
 
@@ -137,7 +137,7 @@ senha
 ```
 
 
-### 💪 Funcionalidades extras:
+### 🎯 Funcionalidades extras:
 
 - Tratamento de rotas inexistentes (404) e de erros internos (500)
 - Paginação dos dados dos usuários
@@ -158,7 +158,7 @@ senha
 Fiz a construção das telas utilizando o Figma.
 - [Layout](https://www.figma.com/file/hV3HBNcYY1RzlajZ7JaQzN/UsersSystem?node-id=0%3A1) 
 
-## 👋 Experiência com o projeto
+### 😄 Experiência com o projeto
 
 Neste projeto pude aprender e aprimorar demais! Consegui notar e valorizar também a importância de um código limpo, algo que tenho me atentado diariamente.
 Aprendi a utilizar várias bibliotecas que nunca havia usado e/ou não tinha tamanha experiência como `react-lottie` para animações, `react-masked-text` para máscaras e o próprio `jest` para testes.

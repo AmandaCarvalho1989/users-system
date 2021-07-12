@@ -84,6 +84,7 @@ $ npm run build
 ### 🔌 Iniciar a aplicação
 
 Inicie a aplicação em um terminal e o servidor em outro (json-server)
+
 PS: O servidor está rodando na porta 3333, então verifique se alguma outra aplicação já está utilizando-a.
 
 ```

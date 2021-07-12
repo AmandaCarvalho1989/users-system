@@ -57,7 +57,7 @@ Utilizei as seguintes tecnologias:
 Faça o clone do repositório para ter uma versão do projeto em sua máquina
 
 ```
-$ git clone hhttps://github.com/AmandaCarvalho1989/users-system.git && cd users-system
+$ git clone https://github.com/AmandaCarvalho1989/users-system.git && cd users-system
 ```
 
 
@@ -73,7 +73,7 @@ $ npm install
 
 ### 💡 Gerar uma versão funcional
 
-Gere uma versão de build para ter a melhor experiência com a aplicação:
+Gere uma versão de build para o projeto ter uma performance melhor
 
 ```
 $ yarn build
@@ -84,14 +84,14 @@ $ npm run build
 ### 🔌 Iniciar a aplicação
 
 Inicie a aplicação em um terminal e o servidor em outro (json-server)
-
+PS: O servidor está rodando na porta 3333, então verifique se alguma outra aplicação já está utilizando-a.
 
 ```
-$ yarn start // Iniciando aplicação
+$ yarn start 
 $ yarn server
 
 
-# npm run start // Iniciando aplicação
+# npm run start 
 $ npm run server
 
 ```
@@ -120,7 +120,7 @@ Senha: `123456`
 
 ###  🎨 Layout
 
-Fiz a construção das telas utilizando o Figma.
+Fiz a construção das telas utilizando o Figma, você pode acessar clicando no link abaixo.
 - [Layout](https://www.figma.com/file/hV3HBNcYY1RzlajZ7JaQzN/UsersSystem?node-id=0%3A1) 
 
 

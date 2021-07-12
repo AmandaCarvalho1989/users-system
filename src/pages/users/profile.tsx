@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "../../hooks/auth";
 import { FileUpload } from "../../components/InputFile";
 import { toast } from "react-toastify";
+import InputDocument from "../../components/InputDocument";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -147,11 +148,10 @@ export const Profile: React.FC = () => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input
-                  readOnly
+                <InputDocument
                   {...register("document")}
-                  as={InputMask}
-                  mask="***.***.***-**"
+                  value={user?.document}
+                  readonly
                 />
                 {errors.document && (
                   <FormHelperText color="red.400">
@@ -183,21 +183,6 @@ export const Profile: React.FC = () => {
                 {errors.password.message}
               </FormHelperText>
             )}
-          </FormControl>
-          <FormControl id="role" pl="1rem">
-            <FormLabel>Função </FormLabel>
-            <RadioGroup
-              {...register("role")}
-              colorScheme="purple"
-              value={user?.role}
-            >
-              <Radio value="ADMIN" defaultChecked={user?.role === "ADMIN"}>
-                Administrador
-              </Radio>
-              <Radio value="USER" defaultChecked={user?.role === "USER"}>
-                Usuário
-              </Radio>
-            </RadioGroup>
           </FormControl>
         </Stack>
         <HStack w="full" justifyContent="flex-end" pt="2rem">

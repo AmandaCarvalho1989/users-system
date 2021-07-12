@@ -13,7 +13,7 @@ interface AuthContextData {
   user: IUser;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  updateUser: (user: IUser) => void;
+  updateUserOnStorage: (user: IUser) => void;
 }
 
 interface AuthState {
@@ -74,7 +74,7 @@ const AuthProvider: React.FC = ({ children }) => {
     router.push("/signin");
   };
 
-  const updateUser = (user: IUser) => {
+  const updateUserOnStorage = (user: IUser) => {
     localStorage.setItem("@UsersSystem:user", JSON.stringify(user));
     setData({
       ...data,
@@ -88,7 +88,7 @@ const AuthProvider: React.FC = ({ children }) => {
         user: data.user,
         signIn,
         signOut,
-        updateUser,
+        updateUserOnStorage,
       }}
     >
       {children}

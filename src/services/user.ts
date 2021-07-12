@@ -26,11 +26,12 @@ const createUser = async (user: Omit<IUser, "id">) => {
 };
 
 const updateUser = async (user: IUser) => {
-  const valid = await validateUser(user);
+  console.log('atualizar')
+  // const valid = await validateUser(user);
 
-  if (!valid.success) {
-    throw Error(valid.message);
-  }
+  // if (!valid.success) {
+  //   throw Error(valid.message);
+  // }
   const formattedUser = {
     ...user,
     email: String(user.email).toLowerCase(),

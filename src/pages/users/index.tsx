@@ -50,7 +50,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [isLargerThan1900] = useMediaQuery("(min-width: 900px)");
 
   const { pagesQuantity, currentPage, setCurrentPage } = usePaginator({
@@ -62,6 +62,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
   });
 
   const isAdminUser = user ? user.role === "ADMIN" : false;
+  const isCurrentUser = user?.id === userToDelete?.id;
 
   useEffect(() => {
     loadUsers(currentPage).then((response) => {
@@ -88,6 +89,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
     await deleteUser(userId)
       .then(() => {
         onClose();
+        if (isCurrentUser) signOut();
         toast.success("Usuário deletado com sucesso.");
       })
       .catch(() => {
@@ -160,7 +162,9 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
           isOpen={isOpen}
           onClose={onClose}
           title="Deletar usuário"
-          description={`Tem certeza que deseja deletar o usuário " ${userToDelete.firstName} " `}
+          description={`Tem certeza que deseja deletar o usuário " ${
+            userToDelete.firstName
+          } "? ${isCurrentUser && "Você será deslogado após fazer isso "}`}
           primaryButtonText="Deletar"
           onActionButtonClick={() => handleDeleteUser(userToDelete.id)}
         />

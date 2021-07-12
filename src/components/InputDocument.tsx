@@ -21,12 +21,14 @@ const StyledMaskedInput = styled(TextInputMask)`
 
 interface InputDocumentProps {
   value: string;
-  onChange: (e: string) => void;
+  onChange?: (e: string) => void;
+  readonly?: boolean;
 }
 
 export const InputDocument: React.FC<InputDocumentProps> = ({
   value,
   onChange,
+  readonly = false,
 }) => {
   return (
     <StyledMaskedInput

@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
           h="3rem"
           borderRadius="md"
           objectFit="cover"
-          src={user?.picture ?? "/images/placeholder.png"}
+          src={user?.picture || "/images/placeholder.png"}
           alt={user?.firstName}
         />
         <VStack

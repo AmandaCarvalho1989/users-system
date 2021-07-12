@@ -11,8 +11,6 @@ import {
   Button,
   FormHelperText,
   Stack,
-  Radio,
-  RadioGroup,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
@@ -21,7 +19,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { deleteUser, updateUser } from "../../../services/user";
 import { IUser } from "../../../types/User";
 import { api } from "../../../services/api";
-import { useRouter } from "next/router";
 import { FileUpload } from "../../../components/InputFile";
 import { Modal } from "../../../components/Modal";
 import { useAuth } from "../../../hooks/auth";
@@ -29,58 +26,50 @@ import { toast } from "react-toastify";
 import * as yup from "yup";
 
 import InputDocument from "../../../components/InputDocument";
+import { useRouter } from "next/router";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   birthDate: yup.string().required(),
   document: yup.string().required(),
-  role: yup.string().required(),
+  // role: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(6),
 });
 
 interface EditUserPageProps {
-  user: IUser;
+  userData: IUser;
 }
-export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
-  const [img, setImg] = useState(user.picture);
-  const [document, setDocument] = useState(user.document);
-  const router = useRouter();
-  const { signOut } = useAuth();
+export const EditUser: React.FC<EditUserPageProps> = ({ userData }) => {
+  const [img, setImg] = useState(userData?.picture);
+  const [document, setDocument] = useState(userData.document);
+  const { signOut, updateUserOnStorage, user } = useAuth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+
+  const isCurrentUser = userData.id === user?.id;
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { isDirty, errors },
+    formState: { errors },
   } = useForm<IUser>({
-    defaultValues: user,
+    defaultValues: userData,
     resolver: yupResolver(CreateUserSchema),
   });
 
   const onSubmit = async (data: IUser) => {
-    if (!isDirty) return;
     await updateUser({ ...data, picture: img })
       .then((response) => {
-        toast({
-          position: "top-right",
-          title: "Sucesso",
-          description: "Usuário atualizado com sucesso",
-          status: "success",
-        });
-        updateUser(response);
+        if (isCurrentUser) updateUserOnStorage(response);
+        toast.success("Usuário atualizado com sucesso");
         router.back();
       })
       .catch(() => {
-        toast({
-          position: "top-right",
-          title: "Erro",
-          description: "Houve um erro ao tentar atualizar.",
-          status: "success",
-        });
+        toast.error("Houve um erro ao tentar atualizar.");
       });
   };
 
@@ -88,11 +77,11 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
     await deleteUser(userId)
       .then(() => {
         onClose();
-        toast.success("Usuário atualizado com sucesso");
-        signOut();
+        toast.success("Usuário deletado com sucesso");
+        if (isCurrentUser) signOut();
       })
       .catch(() => {
-        toast.error("Houve um erro ao tentar atualizar.");
+        toast.error("Houve um erro ao tentar deletar.");
       });
   };
 
@@ -248,9 +237,11 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
         isOpen={isOpen}
         onClose={onClose}
         title="Deletar usuário"
-        description={`Tem certeza que deseja deletar o usuário " ${user.firstName} "? Você será deslogado após fazer isso `}
+        description={`Tem certeza que deseja deletar o usuário " ${
+          userData.firstName
+        } "? ${isCurrentUser && "Você será deslogado após fazer isso "}`}
         primaryButtonText="Deletar"
-        onActionButtonClick={() => handleDeleteUser(user.id)}
+        onActionButtonClick={() => handleDeleteUser(userData.id)}
       />
     </VStack>
   );
@@ -272,7 +263,7 @@ export const getServerSideProps: GetServerSideProps<EditUserPageProps> = async (
 
   return {
     props: {
-      user: response.data,
+      userData: response.data,
     }, // will be passed to the page component as props
   };
 };

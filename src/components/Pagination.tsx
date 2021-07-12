@@ -49,7 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <HStack w="full" justifyContent="space-between">
+    <HStack  display='flex' w="full" justifyContent="space-between" alignItems='center'>
       <Text w="full" color="gray">
         {" "}
         Total de {dataQuantity} resultados{" "}

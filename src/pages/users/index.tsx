@@ -155,10 +155,10 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
       <VStack h="full" w="full" py={"1rem"}>
         {isLoading ? (
           <LoadingContainer />
-        ) : viewMode == "card" || !isLargerThan1900 ? (
-          <CardViewContainer data={showData} />
         ) : showData.length == 0 ? (
           <EmptyData />
+        ) : viewMode == "card" || !isLargerThan1900 ? (
+          <CardViewContainer data={showData} />
         ) : (
           <Table
             headerData={headers}

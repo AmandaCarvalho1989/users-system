@@ -17,6 +17,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import router from "next/router";
 
 const SigninSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -37,7 +38,9 @@ export const SignIn: React.FC = () => {
 
   const onSubmit = async (data: SignInCredentials) => {
     if (!isDirty) return;
-    await signIn(data);
+    await signIn(data).then(() => {
+      router.push("/");
+    });
   };
 
   return (

@@ -32,21 +32,28 @@ const AuthProvider: React.FC = ({ children }) => {
       setData({
         user: JSON.parse(user)[0],
       });
-      router.push("/");
-    } else router.push("/signin");
+    } else {
+      router.push("/signin");
+    }
+
     return () => {};
   }, []);
 
   const signIn = async ({ email, password }: SignInCredentials) => {
     try {
-      const response = await api.get("/users", {
-        params: {
-          email,
-          password: base64.encode(password),
-        },
-      });
+      const response = await api
+        .get("/users", {
+          params: {
+            email,
+            password: base64.encode(password),
+          },
+        })
+        .catch(() => {
+          throw Error("Opss, tivemos um erro no servidor");
+        });
 
-      if (!response.data.length) throw Error();
+      if (!response.data.length)
+        throw Error("Usuário não encontrado ou credenciais incorretas");
 
       localStorage.setItem("@UsersSystem:user", JSON.stringify(response.data));
 
@@ -58,7 +65,7 @@ const AuthProvider: React.FC = ({ children }) => {
 
       router.push("/");
     } catch (error) {
-      toast.error("Usuário não encontrado");
+      toast.error(error.message);
 
       setData({
         user: {} as IUser,

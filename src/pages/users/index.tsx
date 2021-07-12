@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 import {
@@ -45,6 +46,9 @@ interface UsersPageProps {
 }
 
 export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
+
+  if (status === 500) return <InternalServerError />
+  
   const [data, setData] = useState<Array<any>>(users);
   const [showData, setShowData] = useState<Array<any>>(users);
   const [totalPages, setTotalPages] = useState(0);
@@ -66,6 +70,7 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
       currentPage: 1,
     },
   });
+  
 
   const isAdminUser = user ? user.role === "ADMIN" : false;
   const isCurrentUser = user?.id === userToDelete?.id;
@@ -114,7 +119,7 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
     setShowData(filtered);
   };
 
-  if (status === 500) return <InternalServerError />;
+
 
   return (
     <VStack

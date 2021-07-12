@@ -16,7 +16,7 @@ export const Home: React.FC = () => {
           play
           style={{ width: "100%", height: "20rem" }}
         />
-        <Heading size="md">Página em contrução</Heading>
+        <Heading size="md">Página em construção</Heading>
         <Text fontSize='lg'>Volte mais tarde</Text>
       </VStack>
     </VStack>

@@ -112,7 +112,7 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
 
   const handleSearchByUserName = (text: string) => {
     let filtered = data.filter((item) =>
-      item.name.toLocaleLowerCase().includes(text.toLowerCase())
+      item.name.toLocaleLowerCase().startsWith(text.toLowerCase())
     );
     setShowData(filtered);
   };

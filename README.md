@@ -81,7 +81,7 @@ $ yarn build
 $ npm run build
 ```
 
-### 🔌 Iniciar a aplicação
+### 🚀 Iniciar a aplicação
 
 Inicie a aplicação em um terminal e o servidor em outro (json-server)
 

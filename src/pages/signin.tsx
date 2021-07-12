@@ -38,9 +38,10 @@ export const SignIn: React.FC = () => {
 
   const onSubmit = async (data: SignInCredentials) => {
     if (!isDirty) return;
-    await signIn(data).then(() => {
-      router.push("/");
-    });
+    await signIn(data)
+    // .then(() => {
+    //   router.push("/");
+    // });
   };
 
   return (

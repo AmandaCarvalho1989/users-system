@@ -12,6 +12,7 @@ import {
   FormHelperText,
   Stack,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
@@ -24,16 +25,16 @@ import { Modal } from "../../../components/Modal";
 import { useAuth } from "../../../hooks/auth";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import base64 from "base-64";
 
 import InputDocument from "../../../components/InputDocument";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   birthDate: yup.string().required(),
   document: yup.string().required(),
-  // role: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(6),
 });
@@ -44,10 +45,9 @@ interface EditUserPageProps {
 export const EditUser: React.FC<EditUserPageProps> = ({ userData }) => {
   const [img, setImg] = useState(userData?.picture);
   const [document, setDocument] = useState(userData.document);
-  const { signOut, updateUserOnStorage, user } = useAuth();
+  const { signOut, user } = useAuth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
 
   const isCurrentUser = userData.id === user?.id;
 
@@ -64,7 +64,10 @@ export const EditUser: React.FC<EditUserPageProps> = ({ userData }) => {
   const onSubmit = async (data: IUser) => {
     await updateUser({ ...data, picture: img })
       .then((response) => {
-        if (isCurrentUser) updateUserOnStorage(response);
+        if (isCurrentUser) {
+          signOut();
+          return;
+        }
         toast.success("Usuário atualizado com sucesso");
         router.back();
       })
@@ -214,22 +217,30 @@ export const EditUser: React.FC<EditUserPageProps> = ({ userData }) => {
         </Stack>
 
         <HStack w="full" justifyContent="flex-end" pt="2rem">
-          <Button
-            size="md"
-            leftIcon={<HiTrash />}
-            colorScheme="red"
-            onClick={onOpen}
-          >
-            Deletar usuário
-          </Button>
-          <Button
-            type="submit"
-            size="md"
-            leftIcon={<MdSave />}
-            colorScheme="purple"
-          >
-            Atualizar usuário
-          </Button>
+          {isCurrentUser && (
+            <Text w="full" fontSize="md" color="red.400">
+              {" "}
+              Você será deslogado após realizar as alterações
+            </Text>
+          )}
+          <HStack w="full" justifyContent="flex-end">
+            <Button
+              size="md"
+              leftIcon={<HiTrash />}
+              colorScheme="red"
+              onClick={onOpen}
+            >
+              Deletar usuário
+            </Button>
+            <Button
+              type="submit"
+              size="md"
+              leftIcon={<MdSave />}
+              colorScheme="purple"
+            >
+              Atualizar usuário
+            </Button>
+          </HStack>
         </HStack>
       </VStack>
 
@@ -239,7 +250,7 @@ export const EditUser: React.FC<EditUserPageProps> = ({ userData }) => {
         title="Deletar usuário"
         description={`Tem certeza que deseja deletar o usuário " ${
           userData.firstName
-        } "? ${isCurrentUser && "Você será deslogado após fazer isso "}`}
+        } "? ${isCurrentUser ? "Você será deslogado após fazer isso " : ""}`}
         primaryButtonText="Deletar"
         onActionButtonClick={() => handleDeleteUser(userData.id)}
       />
@@ -254,6 +265,12 @@ export const getServerSideProps: GetServerSideProps<EditUserPageProps> = async (
 ) => {
   const { id } = context.query;
   const response = await api.get(`users/${id}`);
+  const user = await response.data;
+
+  const formattedUser = {
+    ...user,
+    password: base64.decode(user.password),
+  };
 
   if (!response.data) {
     return {
@@ -263,7 +280,7 @@ export const getServerSideProps: GetServerSideProps<EditUserPageProps> = async (
 
   return {
     props: {
-      userData: response.data,
+      userData: formattedUser,
     }, // will be passed to the page component as props
   };
 };

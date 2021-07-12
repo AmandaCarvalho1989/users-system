@@ -50,7 +50,7 @@ export const AvatarInput = styled.div`
 interface FileUpload extends Omit<InputProps, "onChange"> {
   src: any;
   alt?: string;
-  onChange: (image: string) => void;
+  onChange?: (image: string) => void;
 }
 
 export const FileUpload: React.FC<FileUpload> = ({
@@ -73,7 +73,7 @@ export const FileUpload: React.FC<FileUpload> = ({
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
-    reader.onloadend = (e) => onChange(e.target ? String(e.target.result) : "");
+    reader.onloadend = (e) => onChange && onChange(e.target ? String(e.target.result) : "");
   };
 
   return (

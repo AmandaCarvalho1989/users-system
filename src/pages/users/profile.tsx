@@ -14,53 +14,15 @@ import {
   Radio,
   RadioGroup,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { updateUser } from "../../services/user";
 import { IUser } from "../../types/User";
 import { useRouter } from "next/router";
 import { useAuth } from "../../hooks/auth";
 import { FileUpload } from "../../components/InputFile";
-import { toast } from "react-toastify";
 import InputDocument from "../../components/InputDocument";
-
-const CreateUserSchema = yup.object().shape({
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
-  birthDate: yup.string().required(),
-  document: yup.string().required(),
-  role: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(6),
-  picture: yup.string(),
-});
 
 export const Profile: React.FC = () => {
   const router = useRouter();
   const { user } = useAuth();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { isDirty, errors },
-  } = useForm<IUser>({
-    defaultValues: user,
-    resolver: yupResolver(CreateUserSchema),
-  });
-
-  const onSubmit = async (data: IUser) => {
-    if (!isDirty) return;
-
-    await updateUser(data)
-      .then(() => {
-        toast.success("Usuário atualizado com sucesso");
-        router.back();
-      })
-      .catch(() => {
-        toast.error("Houve um erro ao tentar atualizar.");
-      });
-  };
 
   return (
     <VStack
@@ -84,7 +46,6 @@ export const Profile: React.FC = () => {
         bgColor="white"
         borderRadius="md"
         p="2rem"
-        onSubmit={handleSubmit(onSubmit)}
       >
         <Stack
           w="full"
@@ -95,21 +56,15 @@ export const Profile: React.FC = () => {
         >
           <Stack w="240px" h="192px" borderRadius="md" position="relative">
             <FormControl
-              isInvalid={!!errors.picture}
               isRequired
               display="flex"
               alignItems="center"
               justifyContent="center"
             >
               <FileUpload
-                {...register("picture")}
                 src={user?.picture || "/images/placeholder.png"}
                 isReadOnly
               />
-
-              <FormHelperText>
-                {errors.picture && errors?.picture.message}
-              </FormHelperText>
             </FormControl>
           </Stack>
           <VStack w="full">
@@ -118,51 +73,23 @@ export const Profile: React.FC = () => {
                 <FormLabel>Nome </FormLabel>
                 <Input
                   readOnly
-                  {...register("firstName")}
                   data-testid="firstName"
+                  value={user?.firstName}
                 />
-                {errors.firstName && (
-                  <FormHelperText color="red.400">
-                    {" "}
-                    {errors.firstName.message}
-                  </FormHelperText>
-                )}
               </FormControl>
               <FormControl id="lastName">
                 <FormLabel>Sobrenome </FormLabel>
-                <Input readOnly {...register("lastName")} />
-                {errors.lastName && (
-                  <FormHelperText color="red.400">
-                    {" "}
-                    {errors.lastName.message}
-                  </FormHelperText>
-                )}
+                <Input readOnly value={user?.lastName} />
               </FormControl>
             </Stack>
             <Stack direction={["column", "column", "row", "row"]} w="full">
               <FormControl id="birthDate">
                 <FormLabel>Data Nascimento </FormLabel>
-                <Input readOnly type="date" {...register("birthDate")} />
-                {errors.birthDate && (
-                  <FormHelperText color="red.400">
-                    {" "}
-                    {errors.birthDate.message}
-                  </FormHelperText>
-                )}
+                <Input readOnly type="date" value={user?.birthDate} />
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <InputDocument
-                  {...register("document")}
-                  value={user?.document}
-                  readonly
-                />
-                {errors.document && (
-                  <FormHelperText color="red.400">
-                    {" "}
-                    {errors.document.message}
-                  </FormHelperText>
-                )}
+                <InputDocument value={user?.document} readonly />
               </FormControl>
             </Stack>
           </VStack>
@@ -170,23 +97,11 @@ export const Profile: React.FC = () => {
         <Stack direction={["column", "column", "row", "row"]} w="full">
           <FormControl id="email">
             <FormLabel>Email </FormLabel>
-            <Input type="email" readOnly {...register("email")} />
-            {errors.email && (
-              <FormHelperText color="red.400">
-                {" "}
-                {errors.email.message}
-              </FormHelperText>
-            )}
+            <Input type="email" readOnly value={user?.email} />
           </FormControl>
           <FormControl id="password">
             <FormLabel>Senha </FormLabel>
-            <Input type="password" readOnly {...register("password")} />
-            {errors.password && (
-              <FormHelperText color="red.400">
-                {" "}
-                {errors.password.message}
-              </FormHelperText>
-            )}
+            <Input type="password" readOnly value={user?.password} />
           </FormControl>
         </Stack>
         <HStack w="full" justifyContent="flex-end" pt="2rem">

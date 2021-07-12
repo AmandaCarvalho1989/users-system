@@ -46,9 +46,8 @@ interface UsersPageProps {
 }
 
 export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
+  if (status === 500) return <InternalServerError />;
 
-  if (status === 500) return <InternalServerError />
-  
   const [data, setData] = useState<Array<any>>(users);
   const [showData, setShowData] = useState<Array<any>>(users);
   const [totalPages, setTotalPages] = useState(0);
@@ -70,7 +69,6 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
       currentPage: 1,
     },
   });
-  
 
   const isAdminUser = user ? user.role === "ADMIN" : false;
   const isCurrentUser = user?.id === userToDelete?.id;
@@ -119,8 +117,6 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
     setShowData(filtered);
   };
 
-
-
   return (
     <VStack
       w="full"
@@ -143,7 +139,7 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
 
           <SwitchViewButtons value={viewMode} onChange={setViewMode} />
         </HStack>
-        
+
         <Stack pt="2rem">
           <Button
             leftIcon={<HiPlus />}
@@ -186,7 +182,7 @@ export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
           title="Deletar usuário"
           description={`Tem certeza que deseja deletar o usuário " ${
             userToDelete.firstName
-          } "? ${isCurrentUser && "Você será deslogado após fazer isso "}`}
+          } "? ${isCurrentUser ? "Você será deslogado após fazer isso " : ""}`}
           primaryButtonText="Deletar"
           onActionButtonClick={() => handleDeleteUser(userToDelete.id)}
         />

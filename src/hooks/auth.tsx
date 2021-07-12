@@ -52,9 +52,11 @@ const AuthProvider: React.FC = ({ children }) => {
           throw Error("Opss, tivemos um erro no servidor");
         });
 
-      if (!response.data.length)
+      if (!response.data.length) {
         throw Error("Usuário não encontrado ou credenciais incorretas");
+      }
 
+      
       localStorage.setItem("@UsersSystem:user", JSON.stringify(response.data));
 
       setData({
@@ -74,7 +76,6 @@ const AuthProvider: React.FC = ({ children }) => {
   };
 
   const signOut = () => {
-    localStorage.removeItem("@UsersSystem:token");
     localStorage.removeItem("@UsersSystem:user");
 
     setData({} as AuthState);

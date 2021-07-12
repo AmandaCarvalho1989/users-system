@@ -1,8 +1,7 @@
 import React from "react";
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { IUser } from "../../types/User";
-import { mocked } from "ts-jest/utils";
-import { useAuth } from "../../hooks/auth";
+
 import Users from "../../pages/users";
 
 const mockedHistoryPush = jest.fn();

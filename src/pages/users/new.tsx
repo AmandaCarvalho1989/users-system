@@ -32,7 +32,6 @@ const CreateUserSchema = yup.object().shape({
   lastName: yup.string().required(),
   birthDate: yup.string().required(),
   document: yup.string().required(),
-  role: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().min(6),
 });
@@ -55,7 +54,7 @@ export const NewUser: React.FC = () => {
 
   const onSubmit = async (data: CreateUser) => {
     if (!isDirty) return;
-    await createUser({ ...data, picture: img })
+    await createUser({ ...data, role, picture: img })
       .then(() => {
         toast.success("Usuário cadastrado com sucesso");
         router.back();
@@ -192,18 +191,12 @@ export const NewUser: React.FC = () => {
           <FormControl id="role" pl="1rem">
             <FormLabel>Função </FormLabel>
             <RadioGroup
-              {...register("role")}
               colorScheme="purple"
-              defaultValue="ADMIN"
+              defaultValue={role}
               value={role}
-              onChange={(e) => {
-                setRole(e);
-                setValue("role", e);
-              }}
+              onChange={(e) => setRole(e)}
             >
-              <Radio value="ADMIN" defaultChecked>
-                Administrador
-              </Radio>
+              <Radio value="ADMIN">Administrador</Radio>
               <Radio value="USER">Usuário</Radio>
             </RadioGroup>
           </FormControl>

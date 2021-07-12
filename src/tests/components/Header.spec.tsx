@@ -1,21 +1,20 @@
 import React from "react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { mocked } from 'ts-jest/utils'
+import { render } from "@testing-library/react";
+import { mocked } from "ts-jest/utils";
 import { Header } from "../../components/Header";
 import { useAuth } from "../../hooks/auth";
 
-
-jest.mock('next/router', () => {
+jest.mock("next/router", () => {
   return {
     useRouter() {
       return {
-        route: '/users'
-      }
-    }
-  }
-})
+        route: "/users",
+      };
+    },
+  };
+});
 
-jest.mock('../../hooks/auth')
+jest.mock("../../hooks/auth");
 
 describe("Header component", () => {
   it("should be able to render the header", () => {
@@ -35,8 +34,8 @@ describe("Header component", () => {
     } as any);
     const { getByText } = render(<Header />);
 
-    const role = getByText('ADMIN')
+    const role = getByText("ADMIN");
 
-    expect(role).toBeInTheDocument()
+    expect(role).toBeInTheDocument();
   });
 });

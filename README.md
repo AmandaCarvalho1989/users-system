@@ -77,33 +77,6 @@ Utilizei as seguintes tecnologias:
 - JSON-Server
 - Jest
 
-### 🛠 ReactJs
-
-O ReactJS é uma framework em javascript que apresentou ao mercado de desenvolvimento o conceito de JSX (JavaScript XML) que é basicamente a utilização de tags dentro do javascript, ou seja, trechos html sendo interpretado pelo javascript. Nesse caso o React é a base do projeto, todos os sistemas são feitos a partir dele.
-
-### 🛠 NextJs
-
-O NextJS é uma framework do ReactJS, que eleva a utilização do React a outro nível. O Next ficou popular por conta das funcionalidades diversas que ele traz ao React, como por exemplo:
-- SPA (Single page application)
-- SSR (Server Side Rendering)
-- Pages routes
-- Dynamic routes
-- API routes
-- Static Pages Generation
-- tratamento de imagens
-- etc...
-
-Além disso o Next possuí um Back end intermediario que é responsável pela renderização das telas em server side, retornando para o usuário final uma página estática completamente tratada, o que não limita o usuário à utilização do Javascript no browser. E é nesse servidor aonde os endpoints desenvolvidos dentro da pasta api (do api routes) são executadas, deixando as requisições do front-end mais seguras e eficiêntes.
-
-Nesse projeto utilizamos as principais tecnologias:
-- SPA para ter mais desempenho e fluidez na navegação
-- Pages routes para agilizar a manipulação de rotas de navegação
-- Dynamic routes para tornar o gerenciamento de informações mais transparente para o usuário
-
-### 🔧 Typescript
-
-O Typescript é uma ferramenta de tipagem feita pela microsoft, desenvolvida com o objetivo de esclarecer o código e prever erros que aconteceriam por conta da tipagem dinâmica presente no Javascript atualmente, além disso o Typescript também trás uma vizualização clara do código para desenvolvedores multiplos no projeto. Nesse projeto o Typescript está sendo utilizado com um método de boas práticas e para organização e clareza do código.
-
 
 ## Utilização do projeto
 
@@ -114,7 +87,6 @@ Faça o clone do repositório para ter uma versão do projeto em sua máquina
 ```
 $ git clone hhttps://github.com/AmandaCarvalho1989/users-system.git && cd users-system
 ```
-
 
 
 ### 🧰 Instalar dependências
@@ -174,9 +146,9 @@ senha
 
 ### 📊 Sobre o desenvolvimento 
 
-- Optei começar o projeto com o NextJS e com Typescript. O NextJS pelas funcionalidades que ele traz ao React, como ciração de páginas dinâmicas, 
+- Optei começar o projeto com o `NextJS` e com `Typecript`. O NextJS pelas funcionalidades que ele traz ao React, como criação de páginas dinâmicas, renderização de telas no lado do servidor, entre outras. O Typescript pela clareza que traz ao código, possibiltando melhor manutenção. 
 - Escolhi utilizar o `ChakraUI`, que é uma biblioteca de componentes do React que facilita a construção da IU de um aplicativo ou site, pois ele é bem simples, flexível e acessível.
-- Para o CRUD dos usuários utilizei o JSON-SERVER que faz a simulação de uma API.
+- Para o CRUD dos usuários utilizei o `Json-server` que faz a simulação de uma API.
 - Para lidar com os dados dos formulários utilizei o `react-hook-form` junto com `yup`, que serve para realizar validações dos campos.
 - Apesar do Chakra ter componente Toast, preferi utilizar a biblioteca `react-toastify` para mensagens de erro e/ou sucesso.
 - Para alguns componentes, tive que aplicar `styled-components` para melhor funcionamento.

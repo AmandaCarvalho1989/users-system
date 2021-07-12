@@ -42,6 +42,7 @@ export const NewUser: React.FC = () => {
 
   const [img, setImg] = useState("");
   const [document, setDocument] = useState("");
+  const [role, setRole] = useState("ADMIN");
 
   const {
     register,
@@ -194,7 +195,11 @@ export const NewUser: React.FC = () => {
               {...register("role")}
               colorScheme="purple"
               defaultValue="ADMIN"
-              onChange={(e) => setValue("role", e)}
+              value={role}
+              onChange={(e) => {
+                setRole(e);
+                setValue("role", e);
+              }}
             >
               <Radio value="ADMIN" defaultChecked>
                 Administrador

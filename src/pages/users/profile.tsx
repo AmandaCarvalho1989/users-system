@@ -116,7 +116,11 @@ export const Profile: React.FC = () => {
             <Stack direction={["column", "column", "row", "row"]} w="full">
               <FormControl id="firstName">
                 <FormLabel>Nome </FormLabel>
-                <Input readOnly {...register("firstName")} />
+                <Input
+                  readOnly
+                  {...register("firstName")}
+                  data-testid="firstName"
+                />
                 {errors.firstName && (
                   <FormHelperText color="red.400">
                     {" "}

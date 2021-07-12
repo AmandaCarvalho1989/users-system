@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IUser } from "../types/User";
 import { HiTrash, HiPencilAlt } from "react-icons/hi";
+import EmptyData from "./EmptyData";
 
 export interface HeaderData {
   key: string;
@@ -42,7 +43,7 @@ export const Table: React.FC<TableProps> = ({
       </Thead>
       <Tbody>
         {!bodyData.length ? (
-          <div> no</div>
+          <EmptyData />
         ) : (
           bodyData.map((item) => {
             return (
@@ -50,7 +51,6 @@ export const Table: React.FC<TableProps> = ({
                 {headerData.map((value, idx) => (
                   <Td
                     key={idx}
-                    //display={["none", "none", " block", "block"]}
                   >
                     {item[value.key]}
                   </Td>

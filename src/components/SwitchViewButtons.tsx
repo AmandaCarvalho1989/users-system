@@ -67,6 +67,7 @@ export const SwitchViewButtons: FC<SwitchViewButtonsProps> = ({
       <RadioCard
         {...getRadioProps({ value: "grid" })}
         label="Grid"
+        
         icon={<HiMenuAlt2 />}
       />
 

@@ -5,7 +5,14 @@ import EmptyDataAnimation from "../animations/empty-data.json";
 
 export const EmptyData: React.FC = () => {
   return (
-    <VStack w="full" h="full" bg="white" borderRadius="md" justify="center">
+    <VStack
+      w="full"
+      h="full"
+      bg="white"
+      borderRadius="md"
+      justify="center"
+      data-testid="empty-data"
+    >
       <Lottie
         loop
         animationData={EmptyDataAnimation}

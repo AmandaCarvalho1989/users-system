@@ -3,11 +3,12 @@ import React from "react";
 import { HStack, Text, VStack, Image } from "@chakra-ui/react";
 import { useAuth } from "../hooks/auth";
 import { useRouter } from "next/router";
+import { IUser } from "../types/User";
 
 export const Header: React.FC = () => {
   const { user } = useAuth();
   const router = useRouter();
-  
+
   const handleGoToProfile = () => {
     router.push("/users/profile");
   };

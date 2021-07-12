@@ -27,7 +27,9 @@ import { SwitchViewButtons } from "../../components/SwitchViewButtons";
 import { GetServerSideProps } from "next";
 import { toast } from "react-toastify";
 import { EmptyData } from "../../components/EmptyData";
-import {LoadingContainer} from "../../components/LoadingContainer";
+import { LoadingContainer } from "../../components/LoadingContainer";
+import InternalServerError from "../500";
+import { api } from "../../services/api";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -39,11 +41,12 @@ const headers: HeaderData[] = [
 
 interface UsersPageProps {
   users: Array<IUser>;
+  status: number;
 }
 
-export const Users: React.FC<UsersPageProps> = ({ users }) => {
+export const Users: React.FC<UsersPageProps> = ({ users, status }) => {
   const [data, setData] = useState<Array<any>>(users);
-  const [showData, setShowData] = useState<Array<any>>([]);
+  const [showData, setShowData] = useState<Array<any>>(users);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IUser | undefined>(
@@ -70,16 +73,18 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
   useEffect(() => {
     setIsLoading(true);
     loadUsers(currentPage).then((response) => {
-      const formattedData = response.data.map((item: any) => ({
-        ...item,
-        birthDate: formatDate(item.birthDate),
-        document: formatDocument(item.document),
-        name: item.firstName + " " + item.lastName,
-      }));
-      setTotalPages(response.headers["x-total-count"]);
-      setData(formattedData);
-      setShowData(formattedData);
-      setIsLoading(false);
+      if (response) {
+        const formattedData = response.data.map((item: any) => ({
+          ...item,
+          birthDate: formatDate(item.birthDate),
+          document: formatDocument(item.document),
+          name: item.firstName + " " + item.lastName,
+        }));
+        setTotalPages(response.headers["x-total-count"]);
+        setData(formattedData);
+        setShowData(formattedData);
+        setIsLoading(false);
+      }
     });
 
     return () => {};
@@ -109,6 +114,8 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
     setShowData(filtered);
   };
 
+  if (status === 500) return <InternalServerError />;
+
   return (
     <VStack
       w="full"
@@ -131,6 +138,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
 
           <SwitchViewButtons value={viewMode} onChange={setViewMode} />
         </HStack>
+        
         <Stack pt="2rem">
           <Button
             leftIcon={<HiPlus />}
@@ -144,11 +152,9 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
         </Stack>
       </HStack>
       <VStack h="full" w="full" py={"1rem"}>
-        {isLoading ?
-        <LoadingContainer />
-      :  
-     
-        viewMode == "card" || !isLargerThan1900 ? (
+        {isLoading ? (
+          <LoadingContainer />
+        ) : viewMode == "card" || !isLargerThan1900 ? (
           <CardViewContainer data={showData} />
         ) : showData.length == 0 ? (
           <EmptyData />
@@ -160,8 +166,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
             onEditClick={(user) => router.push(`/users/edit/${user.id}`)}
             hasPermission={isAdminUser}
           />
-        )
-      }
+        )}
         <Pagination
           dataQuantity={totalPages}
           currentPage={currentPage}
@@ -190,17 +195,31 @@ export default Users;
 export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (
   context
 ) => {
-  const response = await loadUsers(1);
-  const formattedData = response.data.map((item: any) => ({
-    ...item,
-    birthDate: formatDate(item.birthDate),
-    document: formatDocument(item.document),
-    name: item.firstName + " " + item.lastName,
-  }));
+  try {
+    const response = await api.get("/users", {
+      params: {
+        page: 1,
+      },
+    });
+    const formattedData = response.data.map((item: any) => ({
+      ...item,
+      birthDate: formatDate(item.birthDate),
+      document: formatDocument(item.document),
+      name: item.firstName + " " + item.lastName,
+    }));
 
-  return {
-    props: {
-      users: formattedData,
-    }, // will be passed to the page component as props
-  };
+    return {
+      props: {
+        users: formattedData,
+        status: 200,
+      }, // will be passed to the page component as props
+    };
+  } catch {
+    return {
+      props: {
+        users: [],
+        status: 500,
+      },
+    };
+  }
 };

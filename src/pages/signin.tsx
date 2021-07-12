@@ -18,7 +18,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-
 const SigninSchema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().min(6),
@@ -29,19 +28,16 @@ export const SignIn: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { isDirty, errors },
+    formState: { isDirty, errors, isSubmitting },
   } = useForm<SignInCredentials>({
     resolver: yupResolver(SigninSchema),
   });
-  const [isLoading, setIsLoading] = useState(false);
-
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
 
   const onSubmit = async (data: SignInCredentials) => {
     if (!isDirty) return;
-    setIsLoading(true);
-    await signIn(data).finally(() => setIsLoading(false));
+    await signIn(data);
   };
 
   return (
@@ -97,7 +93,7 @@ export const SignIn: React.FC = () => {
         >
           <FormControl id="email">
             <FormLabel>Email </FormLabel>
-            <Input type="email" {...register("email")} />
+            <Input type="email" placeholder="Email" {...register("email")} />
             {errors.email && (
               <FormHelperText color="red.400">
                 {" "}
@@ -110,7 +106,7 @@ export const SignIn: React.FC = () => {
             <InputGroup size="md">
               <Input
                 type={show ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder="Senha"
                 {...register("password")}
               />
               <InputRightElement width="4.5rem">
@@ -134,10 +130,10 @@ export const SignIn: React.FC = () => {
           <Button
             w="full"
             colorScheme="purple"
-            disabled={!isDirty || isLoading}
+            disabled={!isDirty || isSubmitting}
             size="md"
             type="submit"
-            isLoading={isLoading}
+            isLoading={isSubmitting}
             loadingText="Carregando"
           >
             Entrar

@@ -1,11 +1,21 @@
 import React from "react";
-import { Image, Stack } from "@chakra-ui/react";
-import notFoundImg from "../../public/004.jpg";
+import { Heading, VStack } from "@chakra-ui/react";
+import Lottie from "react-lottie-player";
+import NotFoundAnimation from "../animations/not-found.json";
+import Link from "next/link";
+
 const NotFound: React.FC = () => {
   return (
-    <Stack>
-      <Image src="../../public/004.jpg" alt="Not found" />
-    </Stack>
+    <VStack w="full" h="full" bg="white" borderRadius="md" justify="center" >
+      <Lottie
+        loop
+        animationData={NotFoundAnimation}
+        play
+        style={{ width: "100%", height: "12rem" }}
+      />
+      <Heading size="md">Opss, caminho não encontrado</Heading>
+      <Link href='/users'>Voltar para a aplicação</Link>
+    </VStack>
   );
 };
 

@@ -26,6 +26,8 @@ import { ViewsType } from "../../components/SwitchViewButtons";
 import { SwitchViewButtons } from "../../components/SwitchViewButtons";
 import { GetServerSideProps } from "next";
 import { toast } from "react-toastify";
+import { EmptyData } from "../../components/EmptyData";
+import {LoadingContainer} from "../../components/LoadingContainer";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -43,6 +45,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
   const [data, setData] = useState<Array<any>>(users);
   const [showData, setShowData] = useState<Array<any>>([]);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [userToDelete, setUserToDelete] = useState<IUser | undefined>(
     undefined
   );
@@ -65,6 +68,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
   const isCurrentUser = user?.id === userToDelete?.id;
 
   useEffect(() => {
+    setIsLoading(true);
     loadUsers(currentPage).then((response) => {
       const formattedData = response.data.map((item: any) => ({
         ...item,
@@ -75,6 +79,7 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
       setTotalPages(response.headers["x-total-count"]);
       setData(formattedData);
       setShowData(formattedData);
+      setIsLoading(false);
     });
 
     return () => {};
@@ -139,8 +144,14 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
         </Stack>
       </HStack>
       <VStack h="full" w="full" py={"1rem"}>
-        {viewMode == "card" || !isLargerThan1900 ? (
+        {isLoading ?
+        <LoadingContainer />
+      :  
+     
+        viewMode == "card" || !isLargerThan1900 ? (
           <CardViewContainer data={showData} />
+        ) : showData.length == 0 ? (
+          <EmptyData />
         ) : (
           <Table
             headerData={headers}
@@ -149,7 +160,8 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
             onEditClick={(user) => router.push(`/users/edit/${user.id}`)}
             hasPermission={isAdminUser}
           />
-        )}
+        )
+      }
         <Pagination
           dataQuantity={totalPages}
           currentPage={currentPage}

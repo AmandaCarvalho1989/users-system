@@ -1,15 +1,9 @@
 import { useRouter } from "next/router";
-import React, {
-  createContext,
-  useCallback,
-  useState,
-  useContext,
-  useEffect,
-} from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import { api } from "../services/api";
 import { IUser } from "../types/User";
 import base64 from "base-64";
-import { useToast } from "@chakra-ui/react";
+import { toast } from "react-toastify";
 
 export interface SignInCredentials {
   email: string;
@@ -30,7 +24,6 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const router = useRouter();
-  const toast = useToast();
   const [data, setData] = useState<AuthState>({} as AuthState);
 
   useEffect(() => {
@@ -61,21 +54,11 @@ const AuthProvider: React.FC = ({ children }) => {
         user: response.data[0],
       });
 
-      toast({
-        position: "top-right",
-        title: "Sucesso",
-        description: "Login realizado com sucesso",
-        status: "success",
-      });
+      toast.success("Login realizado com sucesso");
 
       router.push("/");
     } catch (error) {
-      toast({
-        position: "top-right",
-        title: "Erro ao entrar",
-        description: "Usuário não encontrado",
-        status: "error",
-      });
+      toast.error("Usuário não encontrado");
 
       setData({
         user: {} as IUser,

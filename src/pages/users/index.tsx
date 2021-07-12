@@ -9,7 +9,6 @@ import {
   Input,
   Button,
   useDisclosure,
-  useToast,
   Stack,
   useMediaQuery,
 } from "@chakra-ui/react";
@@ -26,7 +25,7 @@ import CardViewContainer from "../../components/CardViewContainer";
 import { ViewsType } from "../../components/SwitchViewButtons";
 import { SwitchViewButtons } from "../../components/SwitchViewButtons";
 import { GetServerSideProps } from "next";
-import { api } from "../../services/api";
+import { toast } from "react-toastify";
 
 const headers: HeaderData[] = [
   { key: "name", label: "Nome" },
@@ -51,7 +50,6 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
-  const toast = useToast();
   const { user } = useAuth();
   const [isLargerThan1900] = useMediaQuery("(min-width: 900px)");
 
@@ -90,20 +88,10 @@ export const Users: React.FC<UsersPageProps> = ({ users }) => {
     await deleteUser(userId)
       .then(() => {
         onClose();
-        toast({
-          position: "top-right",
-          title: "Sucesso",
-          description: "Usuário deletado com sucesso",
-          status: "success",
-        });
+        toast.success("Usuário deletado com sucesso.");
       })
       .catch(() => {
-        toast({
-          position: "top-right",
-          title: "Erro",
-          description: "Houve um erro ao tentar deletar o usuáriou.",
-          status: "success",
-        });
+        toast.error("Houve um erro ao tentar deletar.");
       });
   };
 

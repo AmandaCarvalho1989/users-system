@@ -13,21 +13,22 @@ import {
   Stack,
   Radio,
   RadioGroup,
-  useToast,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { deleteUser, updateUser } from "../../../services/user";
 import { IUser } from "../../../types/User";
 import { api } from "../../../services/api";
 import { useRouter } from "next/router";
-import InputMask from "react-input-mask";
 import { FileUpload } from "../../../components/InputFile";
 import { Modal } from "../../../components/Modal";
 import { useAuth } from "../../../hooks/auth";
+import { toast } from "react-toastify";
+import * as yup from "yup";
+
+import InputDocument from "../../../components/InputDocument";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -44,8 +45,7 @@ interface EditUserPageProps {
 }
 export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
   const [img, setImg] = useState(user.picture);
-
-  const toast = useToast();
+  const [document, setDocument] = useState(user.document);
   const router = useRouter();
   const { signOut } = useAuth();
 
@@ -88,21 +88,11 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
     await deleteUser(userId)
       .then(() => {
         onClose();
-        toast({
-          position: "top-right",
-          title: "Sucesso",
-          description: "Usuário deletado com sucesso",
-          status: "success",
-        });
+        toast.success("Usuário atualizado com sucesso");
         signOut();
       })
       .catch(() => {
-        toast({
-          position: "top-right",
-          title: "Erro",
-          description: "Houve um erro ao tentar deletar o usuáriou.",
-          status: "success",
-        });
+        toast.error("Houve um erro ao tentar atualizar.");
       });
   };
 
@@ -192,10 +182,14 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input
+
+                <InputDocument
                   {...register("document")}
-                  as={InputMask}
-                  mask="***.***.***-**"
+                  value={document}
+                  onChange={(e: string) => {
+                    setDocument(e);
+                    setValue("document", e);
+                  }}
                 />
                 {errors.document && (
                   <FormHelperText color="red.400">
@@ -227,20 +221,6 @@ export const EditUser: React.FC<EditUserPageProps> = ({ user }) => {
                 {errors.password.message}
               </FormHelperText>
             )}
-          </FormControl>
-          <FormControl id="role" pl="1rem">
-            <FormLabel>Função </FormLabel>
-            <RadioGroup
-              {...register("role")}
-              colorScheme="purple"
-              defaultValue="ADMIN"
-              onChange={(e) => setValue("role", e)}
-            >
-              <Radio value="ADMIN" defaultChecked>
-                Administrador
-              </Radio>
-              <Radio value="USER">Usuário</Radio>
-            </RadioGroup>
           </FormControl>
         </Stack>
 

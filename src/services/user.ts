@@ -2,12 +2,19 @@ import { IUser } from "../types/User";
 import { api } from "./api";
 import base64 from "base-64";
 import { removeDocumentMask } from "../utils/format";
+import { validateUser } from "../utils/validateUser";
 
 const loadUsers = async (page: number) => {
   const response = await api.get("/users?_page=" + page + "&_limit=5");
   return response;
 };
+
 const createUser = async (user: Omit<IUser, "id">) => {
+  const valid = await validateUser(user);
+
+  if (!valid.success) {
+    throw Error(valid.message);
+  }
   const formattedUser = {
     ...user,
     email: String(user.email).toLowerCase(),
@@ -17,7 +24,13 @@ const createUser = async (user: Omit<IUser, "id">) => {
   const response = await api.post("/users", formattedUser);
   return response.data;
 };
+
 const updateUser = async (user: IUser) => {
+  const valid = await validateUser(user);
+
+  if (!valid.success) {
+    throw Error(valid.message);
+  }
   const formattedUser = {
     ...user,
     email: String(user.email).toLowerCase(),

@@ -1,27 +1,24 @@
-import { useEffect } from "react";
 import type { AppProps } from "next/app";
-import {
-  ChakraProvider,
-  VStack,
-  HStack,
-  Stack,
-  useMediaQuery,
-} from "@chakra-ui/react";
-import { AuthProvider, useAuth } from "../hooks/auth";
+import { ChakraProvider, VStack, Stack, useMediaQuery } from "@chakra-ui/react";
+import { AuthProvider } from "../hooks/auth";
 import { Header } from "../components/Header";
 import { SideNav } from "../components/SideNav";
 import theme from "../styles/theme";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { route } = useRouter();
-  const noPrivateRoutes = ["/signin"];
+  const unauthenticatedRoutes = ["/signin"];
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
 
   return (
     <ChakraProvider theme={theme}>
+      <ToastContainer position="top-right" autoClose={4000} />
       <AuthProvider>
-        {!noPrivateRoutes.includes(route) ? (
+        {!unauthenticatedRoutes.includes(route) ? (
           <Stack
             direction={["column", "column", "row", "row"]}
             w="100vw"

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import InputMask from "react-input-mask";
-
 import {
   Heading,
   VStack,
@@ -19,11 +17,13 @@ import { createUser } from "../../services/user";
 import { IUser } from "../../types/User";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { MdSave } from "react-icons/md";
 import { FileUpload } from "../../components/InputFile";
+import { toast } from "react-toastify";
+//@ts-ignore
+import * as yup from "yup";
+import InputDocument from "../../components/InputDocument";
 
 type CreateUser = Omit<IUser, "id">;
 
@@ -38,10 +38,10 @@ const CreateUserSchema = yup.object().shape({
 });
 
 export const NewUser: React.FC = () => {
-  const toast = useToast();
   const router = useRouter();
 
   const [img, setImg] = useState("");
+  const [document, setDocument] = useState("");
 
   const {
     register,
@@ -56,21 +56,11 @@ export const NewUser: React.FC = () => {
     if (!isDirty) return;
     await createUser({ ...data, picture: img })
       .then(() => {
-        toast({
-          position: "top-right",
-          title: "Sucesso",
-          description: "Usuário cadastrado com sucesso",
-          status: "success",
-        });
+        toast.success("Usuário cadastrado com sucesso");
         router.back();
       })
-      .catch(() => {
-        toast({
-          position: "top-right",
-          title: "Erro",
-          description: "Houve um erro ao tentar cadastrar.",
-          status: "success",
-        });
+      .catch((error) => {
+        toast.error(error.message);
       });
   };
 
@@ -158,10 +148,14 @@ export const NewUser: React.FC = () => {
               </FormControl>
               <FormControl id="document">
                 <FormLabel>Documento (CPF) </FormLabel>
-                <Input
+
+                <InputDocument
                   {...register("document")}
-                  as={InputMask}
-                  mask="***.***.***-**"
+                  value={document}
+                  onChange={(e: string) => {
+                    setDocument(e);
+                    setValue("document", e);
+                  }}
                 />
                 {errors.document && (
                   <FormHelperText color="red.400">

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { HiPencilAlt, HiDocument } from "react-icons/hi";
-import { MdSave } from "react-icons/md";
+import React from "react";
+import { HiPencilAlt } from "react-icons/hi";
 import InputMask from "react-input-mask";
 import {
   Heading,
@@ -14,19 +13,16 @@ import {
   Stack,
   Radio,
   RadioGroup,
-  useToast,
-  Icon,
-  FormErrorMessage,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { updateUser } from "../../services/user";
 import { IUser } from "../../types/User";
-import { api } from "../../services/api";
 import { useRouter } from "next/router";
 import { useAuth } from "../../hooks/auth";
 import { FileUpload } from "../../components/InputFile";
+import { toast } from "react-toastify";
 
 const CreateUserSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -40,10 +36,9 @@ const CreateUserSchema = yup.object().shape({
 });
 
 export const Profile: React.FC = () => {
-  const toast = useToast();
   const router = useRouter();
   const { user } = useAuth();
- 
+
   const {
     register,
     handleSubmit,
@@ -58,21 +53,11 @@ export const Profile: React.FC = () => {
 
     await updateUser(data)
       .then(() => {
-        toast({
-          position: "top-right",
-          title: "Sucesso",
-          description: "Usuário atualizado com sucesso",
-          status: "success",
-        });
+        toast.success("Usuário atualizado com sucesso");
         router.back();
       })
       .catch(() => {
-        toast({
-          position: "top-right",
-          title: "Erro",
-          description: "Houve um erro ao tentar atualizar.",
-          status: "success",
-        });
+        toast.error("Houve um erro ao tentar atualizar.");
       });
   };
 

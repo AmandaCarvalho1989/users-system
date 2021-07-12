@@ -1,12 +1,15 @@
-<h1 align="center" >UsersSystem</h1>
+<h1>UsersSystem</h1>
 <img src="public/images/preview.png" />
 
 ---
 
 ## 💻 Sobre
 
-O UsersSystem é um projeto de desafio passado pela Softplan.
-O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
+O UsersSystem é um projeto de desafio passado pela Softplan. O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
+
+Neste projeto pude aprender e aprimorar demais! Consegui notar e valorizar também a importância de um código limpo, algo que tenho me atentado diariamente.
+Aprendi a utilizar várias bibliotecas que nunca havia usado e/ou não tinha tamanha experiência como `react-lottie` para animações, `react-masked-text` para máscaras e o próprio `jest` para testes.
+Desde já, agradeço pela oportunidade! Com certeza este desafio me fez uma profissional melhor! 😀
 
 
 ### Requisitos exigidos:
@@ -33,37 +36,6 @@ O resultado foi uma aplicação com sistema de autenticação e gerenciamento de
 
 - [x]  Testes unitários;
 - [x]  Usuário possuir foto no seu cadastro;
-
-### Estrutura de usuário recomendada:
-
-```
-{
-  "id": 1,
-  "firstName": "Thomas",
-  "lastName": "Hudson",
-  "birthDate": "1989-12-24",
-  "email": "thomas.hudson@gmail.com",
-  "document": "52254883070",
-  "password": "MTIzNDU2",
-  "role": "ADMIN",      
-}
-```
-
-### Estrutura de usuário final:
-```
-{
-  "id": 1,
-  "firstName": "Thomas",
-  "image": BASE_64
-  "lastName": "Hudson",
-  "birthDate": "24-12-1989",
-  "email": "thomas.hudson@gmail.com",
-  "document": "52254883070",
-  "password": "MTIzNDU2",
-  "role": "ADMIN",      
-}
-```
----
 
 
 ## 🧬  Tecnologias
@@ -101,7 +73,7 @@ $ npm install
 
 ### 💡 Gerar uma versão funcional
 
-O userManager ja está pronto, portanto não precisamos executa-lo em ambiente de desenvolvimento, por isso podemos gerar uma versão de build para ter a melhor experiência com a aplicação:
+Gere uma versão de build para ter a melhor experiência com a aplicação:
 
 ```
 $ yarn build
@@ -111,30 +83,23 @@ $ npm run build
 
 ### 🔌 Iniciar a aplicação
 
-Agora que temos tudo pronto basta iniciar a aplicação, só lembrando que o userManager utiliza o json-server portanto ele precisa que o servidor esteja disponível para que possa utilizar o sistema de gerenciamento e autenticação:
+Inicie a aplicação em um terminal e o servidor em outro (json-server)
 
 
 ```
-
+$ yarn start // Iniciando aplicação
 $ yarn server
-$ yarn start
 
-# com npm
+
+# npm run start // Iniciando aplicação
 $ npm run server
 
 ```
 
 ### Usuário para testes
 
-email
-```
-admin@admin.com
-```
-
-senha
-```
-123456
-```
+Email: `admin@admin.com`
+Senha: `123456`
 
 
 ### 🎯 Funcionalidades extras:
@@ -158,8 +123,5 @@ senha
 Fiz a construção das telas utilizando o Figma.
 - [Layout](https://www.figma.com/file/hV3HBNcYY1RzlajZ7JaQzN/UsersSystem?node-id=0%3A1) 
 
-### 😄 Experiência com o projeto
 
-Neste projeto pude aprender e aprimorar demais! Consegui notar e valorizar também a importância de um código limpo, algo que tenho me atentado diariamente.
-Aprendi a utilizar várias bibliotecas que nunca havia usado e/ou não tinha tamanha experiência como `react-lottie` para animações, `react-masked-text` para máscaras e o próprio `jest` para testes.
-Desde já, agradeço pela oportunidade! Com certeza este desafio me fez uma profissional melhor!  
+

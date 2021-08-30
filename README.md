@@ -5,7 +5,7 @@
 
 ## 💻 Sobre
 
-O UsersSystem é um projeto de desafio passado pela Softplan. O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
+O UsersSystem é um projeto de desafio para um processo seletivo. O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
 
 Neste projeto pude aprender e aprimorar demais! Consegui notar e valorizar também a importância de um código limpo, algo que tenho me atentado diariamente.
 Aprendi a utilizar várias bibliotecas que nunca havia usado e/ou não tinha tamanha experiência como `react-lottie` para animações, `react-masked-text` para máscaras e o próprio `jest` para testes.

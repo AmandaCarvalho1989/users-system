@@ -88,11 +88,11 @@ Inicie a aplicação em um terminal e o servidor em outro (json-server)
 PS: O servidor está rodando na porta 3333, então verifique se alguma outra aplicação já está utilizando-a.
 
 ```
-$ yarn start 
+$ yarn dev 
 $ yarn server
 
 
-# npm run start 
+# npm run dev 
 $ npm run server
 
 ```

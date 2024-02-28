@@ -5,38 +5,7 @@
 
 ## 💻 Sobre
 
-O UsersSystem é um projeto de desafio para um processo seletivo. O resultado foi uma aplicação com sistema de autenticação e gerenciamento de usuários.
-
-Neste projeto pude aprender e aprimorar demais! Consegui notar e valorizar também a importância de um código limpo, algo que tenho me atentado diariamente.
-Aprendi a utilizar várias bibliotecas que nunca havia usado e/ou não tinha tamanha experiência como `react-lottie` para animações, `react-masked-text` para máscaras e o próprio `jest` para testes.
-Desde já, agradeço pela oportunidade! Com certeza este desafio me fez uma profissional melhor! 😀
-
-
-### Requisitos exigidos:
-
-- [x]  A aplicação deverá estar protegida por login e senha
-- [x] Deverá existir 2 tipos de perfis (ADMIN e USER)
-- [x] Deverá possuir interface para pesquisa dos usuários cadastrados
-- [x]  Deverá possuir interface para cadastro (CRUD) dos usuários da aplicação
-- [x] Deverá possuir interface para visualizar “Meu perfil”, podendo alterar a senha
-- [x] Deverá possuir a opção de “Sair” da aplicação
-- [x]  Deverá aparecer o nome e/ou foto do usuário no header da aplicação
-
-### Regras de negócio exigidas:
-- [x]  O usuário com acesso ADMIN poderá executar cadastro (CRUD) de outros usuários e visualizar
-- [x]  O usuário com acesso USER poderá apenas visualizar os usuários do sistema
-
-### Requisitos não funcionais exigidos:
-
-- [x] O frontend deverá ser desenvolvido em React;
-- [x] Utilizar algum mock http, exemplo: json-server;
-- [x] Utilizar algum framework UI (Material-UI, Bootstrap, AntDesign, etc…);
-
-### PLUS:
-
-- [x]  Testes unitários;
-- [x]  Usuário possuir foto no seu cadastro;
-
+O UsersSystem é um projeto com sistema de autenticação e gerenciamento de usuários.
 
 ## 🧬  Tecnologias
 
